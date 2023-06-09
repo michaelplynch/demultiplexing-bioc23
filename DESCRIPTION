@@ -22,4 +22,4 @@ Suggests:
 URL: https://michaelplynch.github.io/demultiplexing-bioc23/
 BugReports: https://github.com/michaelplynch/demultiplexing-bioc23
 VignetteBuilder: knitr
-DockerImage: ghcr.io/seandavi/buildabiocworkshop:latest
+DockerImage: ghcr.io/mplynch/demultiplexing-bioc23
