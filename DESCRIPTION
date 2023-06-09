@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0001-9535-6461"))
 Description: Package for demultiplexing workshop at bioc23. 
   also gives demuxsnp demo.
-License: GPL-3
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
 Roxygen: list(markdown = TRUE)
@@ -22,6 +22,8 @@ Suggests:
     ComplexHeatmap,
     demuxSNP,
     CiteFuse,
+    dittoSeq,
+    ggpubr,
     knitr,
     rmarkdown,
     pkgdown

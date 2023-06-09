@@ -23,6 +23,8 @@ library(viridisLite)
 library(ComplexHeatmap)
 library(demuxSNP)
 library(CiteFuse)
+library(dittoSeq)
+library(ggpubr)
 
 ````
 
@@ -78,10 +80,10 @@ Example matrix:
 
 ````{r}
 
-# data("CITEseq_example", package = "CiteFuse")
-# sce_citeseq <- preprocessing(CITEseq_example)
-# sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
-# hto<-counts(sce)
+data("CITEseq_example", package = "CiteFuse")
+sce_citeseq <- preprocessing(CITEseq_example)
+sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
+hto<-counts(sce)
 
 #tags<-matrix(rpois(4*10,lambda=5),4,10,dimnames = list(paste(rep("Hashtag",4),1:4,sep=""),paste(rep("Cell"),1:10,sep="")))
 #tags
@@ -89,7 +91,7 @@ Example matrix:
 #hto_mat<-counts(altExp(multiplexed_scrnaseq_sce,"HTO"))
 #hto_mat[1:6,1:10]
 
-#hto[1:4,1:4]
+hto[1:4,1:4]
 
 ````
 
@@ -99,7 +101,7 @@ Overall:
 ````{r}
 
 
-#Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
+Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
 
 ````
 
@@ -111,7 +113,7 @@ Hashtag counts across cells
 # names(mat)<-paste(rep("Hashtag"),1:4,sep="")
 # barplot(mat)
 
-#barplot(hto[,9])
+barplot(hto[,9])
 
 
 ````
@@ -125,6 +127,9 @@ set.seed(1)
 bg<-rnbinom(n=500,size=5,mu=2)
 sig<-rnbinom(n=400,size=10,mu=50)
 hist(c(bg,sig))
+df<-data.frame(c(bg,sig))
+colnames(df)<-"Hashtag1"
+gghistogram(df, x = "Hashtag1", fill = dittoColors(1)[1], palette = "lancet", xlim = c(0, 120), ylim = c(0, 750), alpha = 1,bins=30)
 
 ````
 
