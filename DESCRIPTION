@@ -1,4 +1,4 @@
-Package: demultiplexing-bioc23
+Package: demultiplexingbioc23
 Title: Demultiplexing package demo for Bioc23
 Version: 1.0.0
 Authors@R: 
