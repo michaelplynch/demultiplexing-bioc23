@@ -1,0 +1,161 @@
+---
+title: "Intro to scRNAseq and demultiplexing"
+author: "Michael Lynch"
+date: "`r Sys.Date()`"
+bibliography: references.bib
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+````{r warning=FALSE, message=FALSE}
+
+library(viridisLite)
+library(ComplexHeatmap)
+library(demuxSNP)
+
+````
+
+```{r}
+colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
+```
+
+# Introduction to demultiplexing
+
+## scRNASeq
+
+scRNAseq allows further understanding of cell states, heterogeneity, in TME and other areas.
+Sequencing costs are decreasing but remains a limiting factor in sample size.
+
+For full analysis pipelines see 'link to OSCA'.
+
+Multiplexing allows cells from multple biological samples to be laoded simultaneously on the same lane 
+
+![alt text here \label{labelx}](./images/scrnaseq.png)
+
+## Demultiplexing
+
+Multiplexing is a technique introduced to reduce sequencing cost by increasing the number of cells loaded per lane, while also allowing identification of doublets.
+Multiplexing in scRNAseq involves the sequencing of samples from different
+patients, treatment types or physiological locations together, resulting in
+significant cost savings. The cells must then be demultiplexed, or assigned back
+to their respective groups. A number of experimental and computational methods
+have been proposed to facilitate this, but a universally robust algorithm
+remains elusive. Below, we introduce the two main approaches for demultiplexing and illustrate them with simplified examples.
+
+Successful demultiplexing is critical, with misassigned or unassigned cells resulting in increased waste and lower detectable fold changes between groups.
+
+### Cell Hashing
+
+Cells from each group are labelled with a distinct tag (HTO or LMO) which is
+sequenced to give a counts matrix. Due to non-specific binding, these counts
+form a bimodal distribution. Such methods are generally computationally
+efficient. Their classification performance, however, is highly dependent on the
+tagging quality and many methods do not account for uncertainty in
+classification (@boggy_bff_2022, @kim_citefuse_2020 & @stoeckius_cell_2018).
+
+More recent methods, including
+[demuxmix](https://bioconductor.org/packages/release/bioc/html/demuxmix.html),
+assign a probability that a cell is from a particular group, or made up of
+multiple groups (doublet). This allows users to define a cut-off threshold for
+the assignment confidence. Accounting for uncertainty is an important feature
+for these types of algorithms. But, while they give the user greater flexibility
+in determining which cells to keep, this ultimately results in a trade-off
+between keeping cells which cannot be confidently called or discarding them -
+due to issues with tagging quality rather than RNA quality.
+
+Example matrix:
+
+````{r}
+
+#tags<-matrix(rpois(4*10,lambda=5),4,10,dimnames = list(paste(rep("Hashtag",4),1:4,sep=""),paste(rep("Cell"),1:10,sep="")))
+#tags
+data("multiplexed_scrnaseq_sce")
+hto_mat<-counts(altExp(multiplexed_scrnaseq_sce,"HTO"))
+hto_mat[1:6,1:10]
+````
+
+
+Overall:
+
+````{r}
+
+library(ComplexHeatmap)
+Heatmap(log(as.matrix(hto_mat)+1),cluster_rows=FALSE)
+
+````
+
+Hashtag counts across cells
+
+````{r}
+
+# mat<-tags[,1]
+# names(mat)<-paste(rep("Hashtag"),1:4,sep="")
+# barplot(mat)
+
+barplot(hto_mat[,9])
+
+
+````
+
+
+
+Hashtag counts across a Hashtag (bimodal distriution)
+
+````{r}
+set.seed(1)
+bg<-rnbinom(n=500,size=5,mu=2)
+sig<-rnbinom(n=400,size=10,mu=50)
+hist(c(bg,sig))
+
+````
+
+Reduction in hashing quality leads to reduction in cell hashing algorithm performance.
+
+### SNPs
+
+The second class of methods exploits natural genetic variation between cells and
+so can only be used where the groups are genetically distinct. 
+
+Below we describe  a simplified example of what SNP data may look like.
+
+````{r}
+set.seed(1)
+n=c(50,50,50,50)
+nsnps=20
+snps_mat<-c()
+
+for (i in seq_along(n)) {
+  snp<-rbinom(nsnps,1,0.3)
+  h<-matrix(rep(snp,n[i]),nsnps,n[i])
+  snps_mat<-cbind(snps_mat,h)
+}
+snps_mat[snps_mat==0]<-c(-1)
+tot_mixed<-snps_mat[,sample(1:sum(n))]
+
+Heatmap(snps_mat,cluster_columns=FALSE,cluster_rows=FALSE,col=colors)
+Heatmap(tot_mixed,cluster_columns = FALSE,cluster_rows=FALSE,col=colors)
+Heatmap(tot_mixed,cluster_columns = TRUE,cluster_rows=FALSE,row_gap = unit(1, "mm"),
+    column_gap = unit(1, "mm"),column_split=4, col=colors)
+
+````
+
+Sequencing depth, ambient RNA, mutations
+
+## Sessioninfo
+
+````{r}
+
+sessionInfo()
+
+````
+
+
+## References
