@@ -17,6 +17,11 @@ RoxygenNote: 7.2.3
 Depends: 
     Biobase
 Suggests: 
+    SingleCellExperiment,
+    viridisLite,
+    ComplexHeatmap,
+    demuxSNP,
+    CiteFuse,
     knitr,
     rmarkdown,
     pkgdown

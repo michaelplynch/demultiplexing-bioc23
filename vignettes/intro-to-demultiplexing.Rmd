@@ -3,10 +3,7 @@ title: "Intro to scRNAseq and demultiplexing"
 author: "Michael Lynch"
 date: "`r Sys.Date()`"
 bibliography: references.bib
-output:
-  html_document: default
-  word_document: default
-  pdf_document: default
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Intro to scRNAseq and demultiplexing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ````{r warning=FALSE, message=FALSE}
 
-#library(SingleCellExperiment)
+library(SingleCellExperiment)
 library(viridisLite)
 library(ComplexHeatmap)
 library(demuxSNP)
