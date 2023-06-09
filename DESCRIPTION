@@ -7,7 +7,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "michael.lynch@ul.ie",
            comment = c(ORCID = "0000-0001-9535-6461"))
-Description: Package for demultiplexing workshop at bioc23
+Description: Package for demultiplexing workshop at bioc23. 
+also gives demuxsnp demo.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false

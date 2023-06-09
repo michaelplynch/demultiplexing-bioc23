@@ -13,3 +13,6 @@ Introduce algorithms and do some simulated benchmarking
 3. SNPs (maybe) this will be a little trickier as algorithms as much more computaitonally expensive and generally not run native in R. We'll see.
 
 4. demuxSNP package demo, adapted from demuxSNP vignette
+
+
+Website should be available here: https://michaelplynch.github.io/demultiplexing-bioc23/index.html 
