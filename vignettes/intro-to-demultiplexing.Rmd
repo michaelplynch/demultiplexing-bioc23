@@ -21,11 +21,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ````{r warning=FALSE, message=FALSE}
 
-library(SingleCellExperiment)
+#library(SingleCellExperiment)
 library(viridisLite)
 library(ComplexHeatmap)
 library(demuxSNP)
 library(CiteFuse)
+
 ````
 
 ```{r}
@@ -80,10 +81,10 @@ Example matrix:
 
 ````{r}
 
-data("CITEseq_example", package = "CiteFuse")
-sce_citeseq <- preprocessing(CITEseq_example)
-sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
-hto<-counts(sce)
+# data("CITEseq_example", package = "CiteFuse")
+# sce_citeseq <- preprocessing(CITEseq_example)
+# sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
+# hto<-counts(sce)
 
 #tags<-matrix(rpois(4*10,lambda=5),4,10,dimnames = list(paste(rep("Hashtag",4),1:4,sep=""),paste(rep("Cell"),1:10,sep="")))
 #tags
@@ -91,7 +92,7 @@ hto<-counts(sce)
 #hto_mat<-counts(altExp(multiplexed_scrnaseq_sce,"HTO"))
 #hto_mat[1:6,1:10]
 
-hto[1:4,1:4]
+#hto[1:4,1:4]
 
 ````
 
@@ -100,8 +101,8 @@ Overall:
 
 ````{r}
 
-library(ComplexHeatmap)
-Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
+
+#Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
 
 ````
 
@@ -113,7 +114,7 @@ Hashtag counts across cells
 # names(mat)<-paste(rep("Hashtag"),1:4,sep="")
 # barplot(mat)
 
-barplot(hto[,9])
+#barplot(hto[,9])
 
 
 ````
