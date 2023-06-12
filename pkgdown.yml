@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   intro-to-demultiplexing: intro-to-demultiplexing.html
-last_built: 2023-06-12T14:34Z
+last_built: 2023-06-12T14:44Z
 urls:
   reference: https://michaelplynch.github.io/demultiplexing-bioc23/reference
   article: https://michaelplynch.github.io/demultiplexing-bioc23/articles
