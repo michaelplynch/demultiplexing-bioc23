@@ -2,7 +2,7 @@
 
 This page serves as a WIP site for bioc23 demuliplexing/demuxSNP workshop.
 
-The plan is to generate 3/4/ vignettes
+The plan is to generate 3/4/ vignettes.
 
 1. Intro to demultiplexing. 
 Go through some toy example as a 'this is what the data looks like' an introduce how some issues with poor data quality may present themselves.
