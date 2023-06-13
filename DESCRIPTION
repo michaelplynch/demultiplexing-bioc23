@@ -15,9 +15,9 @@ LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
-    Biobase
+    Biobase,
+    R (>= 4.3.0)
 Suggests: 
-    Seurat,
     SingleCellExperiment,
     viridisLite,
     ComplexHeatmap,

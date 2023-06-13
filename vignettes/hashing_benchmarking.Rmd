@@ -26,7 +26,6 @@ knitr::opts_chunk$set(
 library(demuxSNP)
 library(ComplexHeatmap)
 library(viridisLite)
-library(Seurat)
 library(ggpubr)
 library(dittoSeq)
 library(utils)
