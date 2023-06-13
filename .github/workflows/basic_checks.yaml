@@ -7,7 +7,7 @@ env:
 
 jobs:
   r-build-and-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: bioconductor/bioconductor_docker:devel
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
