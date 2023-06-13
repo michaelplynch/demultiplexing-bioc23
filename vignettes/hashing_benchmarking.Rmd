@@ -1,0 +1,53 @@
+---
+title: "Supervised Demultiplexing using Cell Hashing and SNPs"
+author: "Michael Lynch"
+date: "`r Sys.Date()`"
+bibliography: references.bib
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Hashing demultiplexing benchmarking}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r eval=TRUE, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    message = FALSE,
+    fig.width = 7.5
+)
+```
+
+```{r message=FALSE}
+library(demuxSNP)
+library(ComplexHeatmap)
+library(viridisLite)
+library(Seurat)
+library(ggpubr)
+library(dittoSeq)
+library(utils)
+library(EnsDb.Hsapiens.v86)
+```
+
+```{r}
+colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
+```
+
+# Benchmarking cell hashing based methods
+
+Testing algorithms on real data is a key step to evaluating their true performance.
+Real data includes nuances and factors which may not have been foreseen when developing the algorithm.
+However, in scRNAseq, the cost associated with running benchmark limits the amount of suitable benchmarking data.
+To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions, mostly around reducing hashing quality.
+
+# Session Info
+
+```{r}
+sessionInfo()
+```
+
+# References
