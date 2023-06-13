@@ -7,7 +7,7 @@ env:
 
 jobs:
   r-build-and-check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container: bioconductor/bioconductor_docker:devel
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -35,6 +35,7 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
+          Rscript -e "remotes::install_github('rstudio/reticulate')"
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
