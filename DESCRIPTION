@@ -24,7 +24,6 @@ Suggests:
     CiteFuse,
     dittoSeq,
     ggpubr,
-    Seurat,
     EnsDb.Hsapiens.v86,
     utils,
     knitr,
