@@ -18,6 +18,7 @@ Depends:
     Biobase,
     R (>= 4.3.0)
 Suggests: 
+    reticulate,
     SingleCellExperiment,
     viridisLite,
     ComplexHeatmap,
