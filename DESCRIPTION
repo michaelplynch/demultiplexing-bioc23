@@ -31,6 +31,8 @@ Suggests:
     knitr,
     rmarkdown,
     pkgdown
+Remotes:
+    michaelplynch/demuxSNP
 URL: https://michaelplynch.github.io/demultiplexing-bioc23/
 BugReports: https://github.com/michaelplynch/demultiplexing-bioc23
 VignetteBuilder: knitr
