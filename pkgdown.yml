@@ -1,10 +1,10 @@
-pandoc: 2.19.2
+pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   hashing_benchmarking: hashing_benchmarking.html
   intro-to-demultiplexing: intro-to-demultiplexing.html
-last_built: 2023-06-16T20:24Z
+last_built: 2023-06-16T20:39Z
 urls:
   reference: https://michaelplynch.github.io/demultiplexing-bioc23/reference
   article: https://michaelplynch.github.io/demultiplexing-bioc23/articles
