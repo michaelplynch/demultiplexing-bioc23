@@ -25,6 +25,7 @@ library(demuxSNP)
 library(CiteFuse)
 library(dittoSeq)
 library(ggpubr)
+library(Seurat)
 
 ````
 
