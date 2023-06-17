@@ -30,7 +30,8 @@ Suggests:
     utils,
     knitr,
     rmarkdown,
-    pkgdown
+    pkgdown,
+    BiocStyle
 Remotes:
     michaelplynch/demuxSNP
 URL: https://michaelplynch.github.io/demultiplexing-bioc23/
