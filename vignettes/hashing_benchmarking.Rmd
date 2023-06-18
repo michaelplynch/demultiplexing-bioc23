@@ -1,5 +1,5 @@
 ---
-title: "Supervised Demultiplexing using Cell Hashing and SNPs"
+title: "Simulated benchmarking of hashing based algorithms"
 author: "Michael Lynch"
 date: "`r Sys.Date()`"
 bibliography: references.bib

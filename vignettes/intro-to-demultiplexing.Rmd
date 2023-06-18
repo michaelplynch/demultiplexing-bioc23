@@ -97,7 +97,7 @@ hto[1:4,1:4]
 ````
 
 
-Overall:
+#### Overall:
 
 ````{r}
 
@@ -106,6 +106,8 @@ Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
 
 ````
 
+
+#### Per cell:
 Hashtag counts across cells
 
 ````{r}
@@ -120,7 +122,7 @@ barplot(hto[,9])
 ````
 
 
-
+#### Per hashtag
 Hashtag counts across a Hashtag (bimodal distriution)
 
 ````{r}
