@@ -44,7 +44,6 @@ For full analysis pipelines see 'link to OSCA'.
 
 Multiplexing allows cells from multiple biological samples to be laoded simultaneously on the same lane 
 
-![alt text here \label{labelx}](./images/scrnaseq.png)
 
 ## Demultiplexing
 
@@ -55,6 +54,12 @@ significant cost savings. The cells must then be demultiplexed, or assigned back
 to their respective groups. A number of experimental and computational methods
 have been proposed to facilitate this, but a universally robust algorithm
 remains elusive. Below, we introduce the two main approaches for demultiplexing and illustrate them with simplified examples.
+
+````{r fig.cap="edit to show demultiplexing step"}
+
+knitr::include_graphics("./images/droplet_encaps.png")
+
+````
 
 Successful demultiplexing is critical, with misassigned or unassigned cells resulting in increased waste and lower detectable fold changes between groups.
 

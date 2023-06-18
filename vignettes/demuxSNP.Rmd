@@ -94,6 +94,7 @@ and so may be much more widely applicable.
 ## Installation
 
 ```{r eval=FALSE}
+##biocdevel
 
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
@@ -112,7 +113,7 @@ For full list of arguments and explanation of each function, please refer to
 relevant documentation.
 
 ## Workflow
-
+ ? maybe remove this for demo
 ```{r}
 #Data loading
 data(multiplexed_scrnaseq_sce, 
@@ -185,7 +186,6 @@ removed low quality cells (library size\<1,000 and percentage of genes mapping
 to mitochondrial genes\>10%).
 
 ```{r}
-
 class(multiplexed_scrnaseq_sce)
 class(commonvariants_1kgenomes_subset)
 class(vartrix_consensus_snps)
@@ -219,10 +219,13 @@ algorithm on the data.
 logcounts(multiplexed_scrnaseq_sce) <- counts(multiplexed_scrnaseq_sce)
 seurat <- as.Seurat(multiplexed_scrnaseq_sce)
 seurat <- HTODemux(seurat)
+seurat <- MULTIseqDemux(seurat)
 seurat$hash.ID <- factor(as.character(seurat$hash.ID))
-multiplexed_scrnaseq_sce$seurat <- seurat$hash.ID
+seurat$MULTI_ID <- factor(as.character(seurat$MULTI_ID))
 
 multiplexed_scrnaseq_sce$seurat <- seurat$hash.ID
+multiplexed_scrnaseq_sce$multiseq<- seurat$MULTI_ID
+
 
 table(multiplexed_scrnaseq_sce$seurat)
 ```
@@ -236,6 +239,16 @@ dittoPlot(seurat, "nCount_HTO", group.by = "hash.ID")
 dittoPlot(seurat, "nCount_RNA", group.by = "hash.ID")
 ```
 
+````{r}
+library(CiteFuse)
+multiplexed_scrnaseq_sce<-crossSampleDoublets(multiplexed_scrnaseq_sce)
+
+table(seurat$hash.ID,multiplexed_scrnaseq_sce$doubletClassify_between_label)
+
+table(multiplexed_scrnaseq_sce$seurat,multiplexed_scrnaseq_sce$multiseq)
+
+table(multiplexed_scrnaseq_sce$multiseq,multiplexed_scrnaseq_sce$doubletClassify_between_label)
+````
 For the remainder of this vignette we will outline our method of checking
 whether or not these cells have been called correctly and how to assign them to
 their appropriate group!
