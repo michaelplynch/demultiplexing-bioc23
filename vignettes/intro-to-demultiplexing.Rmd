@@ -42,7 +42,7 @@ Sequencing costs are decreasing but remains a limiting factor in sample size.
 
 For full analysis pipelines see 'link to OSCA'.
 
-Multiplexing allows cells from multple biological samples to be laoded simultaneously on the same lane 
+Multiplexing allows cells from multiple biological samples to be laoded simultaneously on the same lane 
 
 ![alt text here \label{labelx}](./images/scrnaseq.png)
 
@@ -99,10 +99,9 @@ hto[1:4,1:4]
 
 #### Overall:
 
-````{r}
+````{r out.width = '100%',fig.width=8,fig.height=4}
 
-
-Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
+Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE,show_column_names = FALSE)
 
 ````
 
@@ -110,7 +109,7 @@ Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE)
 #### Per cell:
 Hashtag counts across cells
 
-````{r}
+````{r out.width='100%',fig.width=8,fig.height=4}
 
 # mat<-tags[,1]
 # names(mat)<-paste(rep("Hashtag"),1:4,sep="")
@@ -118,6 +117,10 @@ Hashtag counts across cells
 
 barplot(hto[,9])
 
+df<-data.frame(hto)
+df$group<-rownames(df)
+ggplot(data=df, aes(x=group, y=AAGCCGCGTTGTCTTT)) +
+  geom_bar(stat="identity")
 
 ````
 
@@ -125,11 +128,11 @@ barplot(hto[,9])
 #### Per hashtag
 Hashtag counts across a Hashtag (bimodal distriution)
 
-````{r}
+````{r out.width = '100%',fig.width=8,fig.height=4}
 set.seed(1)
 bg<-rnbinom(n=500,size=5,mu=2)
 sig<-rnbinom(n=400,size=10,mu=50)
-hist(c(bg,sig))
+
 df<-data.frame(c(bg,sig))
 colnames(df)<-"Hashtag1"
 gghistogram(df, x = "Hashtag1", fill = dittoColors(1)[1], palette = "lancet", xlim = c(0, 120), ylim = c(0, 750), alpha = 1,bins=30)
@@ -142,6 +145,12 @@ Reduction in hashing quality leads to reduction in cell hashing algorithm perfor
 
 The second class of methods exploits natural genetic variation between cells and
 so can only be used where the groups are genetically distinct. 
+
+````{r fig.cap="SNP variation between individuals"}
+
+knitr::include_graphics("./images/snps.png")
+
+````
 
 Below we describe  a simplified example of what SNP data may look like.
 
