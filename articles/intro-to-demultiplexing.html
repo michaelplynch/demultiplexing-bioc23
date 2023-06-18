@@ -53,7 +53,7 @@
       <a href="../articles/demuxSNP.html">Supervised Demultiplexing using Cell Hashing and SNPs</a>
     </li>
     <li>
-      <a href="../articles/hashing_benchmarking.html">Supervised Demultiplexing using Cell Hashing and SNPs</a>
+      <a href="../articles/hashing_benchmarking.html">Simulated benchmarking of hashing based algorithms</a>
     </li>
     <li>
       <a href="../articles/intro-to-demultiplexing.html">Intro to scRNAseq and demultiplexing</a>
@@ -85,7 +85,7 @@
                         <h4 data-toc-skip class="author">Michael
 Lynch</h4>
             
-            <h4 data-toc-skip class="date">2023-06-17</h4>
+            <h4 data-toc-skip class="date">2023-06-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/michaelplynch/demultiplexing-bioc23/blob/HEAD/vignettes/intro-to-demultiplexing.Rmd" class="external-link"><code>vignettes/intro-to-demultiplexing.Rmd</code></a></small>
       <div class="hidden name"><code>intro-to-demultiplexing.Rmd</code></div>
@@ -177,10 +177,16 @@ quality rather than RNA quality.</p>
 <span><span class="co">## HTO29_5P                2                3                3              209</span></span>
 <span><span class="co">## HTO30_5P                1                1                .                .</span></span>
 <span><span class="co">## HTO44_5P              548                .              196                .</span></span></code></pre>
-<p>Overall:</p>
+<div class="section level5">
+<h5 id="overall">Overall:<a class="anchor" aria-label="anchor" href="#overall"></a>
+</h5>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">hto</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>,cluster_rows<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro-to-demultiplexing_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+</div>
+<div class="section level5">
+<h5 id="per-cell">Per cell:<a class="anchor" aria-label="anchor" href="#per-cell"></a>
+</h5>
 <p>Hashtag counts across cells</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># mat&lt;-tags[,1]</span></span>
@@ -189,6 +195,10 @@ quality rather than RNA quality.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="va">hto</span><span class="op">[</span>,<span class="fl">9</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro-to-demultiplexing_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+</div>
+<div class="section level5">
+<h5 id="per-hashtag">Per hashtag<a class="anchor" aria-label="anchor" href="#per-hashtag"></a>
+</h5>
 <p>Hashtag counts across a Hashtag (bimodal distriution)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -203,6 +213,7 @@ quality rather than RNA quality.</p>
 <p><img src="intro-to-demultiplexing_files/figure-html/unnamed-chunk-6-2.png" width="700"></p>
 <p>Reduction in hashing quality leads to reduction in cell hashing
 algorithm performance.</p>
+</div>
 </div>
 <div class="section level4">
 <h4 id="snps">SNPs<a class="anchor" aria-label="anchor" href="#snps"></a>
