@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supervised Demultiplexing using Cell Hashing and SNPs • demultiplexingbioc23</title>
+<title>demuxSNP: supervised demultiplexing using cell hashing and SNPs • demultiplexingbioc23</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Supervised Demultiplexing using Cell Hashing and SNPs">
+<script src="../pkgdown.js"></script><meta property="og:title" content="demuxSNP: supervised demultiplexing using cell hashing and SNPs">
 <meta property="og:description" content="demultiplexingbioc23">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -50,7 +50,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/demuxSNP.html">Supervised Demultiplexing using Cell Hashing and SNPs</a>
+      <a href="../articles/demuxSNP.html">demuxSNP: supervised demultiplexing using cell hashing and SNPs</a>
     </li>
     <li>
       <a href="../articles/hashing_benchmarking.html">Simulated benchmarking of hashing based algorithms</a>
@@ -81,8 +81,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Supervised Demultiplexing using Cell Hashing and
-SNPs</h1>
+      <h1 data-toc-skip>demuxSNP: supervised demultiplexing using cell
+hashing and SNPs</h1>
                         <h4 data-toc-skip class="author">Michael
 Lynch</h4>
             <address class="author_afil">
@@ -113,56 +113,21 @@ Culhane</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Multiplexing in scRNAseq involves the sequencing of samples from
-different patients, treatment types or physiological locations together,
-resulting in significant cost savings. The cells must then be
-demultiplexed, or assigned back to their respective groups. A number of
-experimental and computational methods have been proposed to facilitate
-this, but a universally robust algorithm remains elusive. Below, we
-introduce some existing methods, highlight the novel features of our
-approach and its advantages to the user.</p>
+<p>Reminder, demultiplexing allows reduction of sequencing costs by
+sequencing cells from mulitple biological sampels on the same lane, as
+well as allowing identifying of the increased proportion of doublets
+associated with greater cells loaded. Poor demultiplexing performance
+results in waste in valuable data, reduction in LFC used in DE or
+otherwise potentailly confusing results.</p>
 <div class="section level3">
 <h3 id="existing-methods">Existing Methods<a class="anchor" aria-label="anchor" href="#existing-methods"></a>
 </h3>
-<div class="section level4">
-<h4 id="cell-hashing">Cell Hashing<a class="anchor" aria-label="anchor" href="#cell-hashing"></a>
-</h4>
-<p>Cells from each group are labelled with a distinct tag (HTO or LMO)
-which is sequenced to give a counts matrix. Due to non-specific binding,
-these counts form a bimodal distribution. Such methods are generally
-computationally efficient. Their classification performance, however, is
-highly dependent on the tagging quality and many methods do not account
-for uncertainty in classification (<span class="citation">Boggy et al.
-(2022)</span>, <span class="citation">Kim et al. (2020)</span> &amp;
-<span class="citation">Stoeckius et al. (2018)</span>).</p>
-<p>More recent methods, including <a href="https://bioconductor.org/packages/release/bioc/html/demuxmix.html" class="external-link">demuxmix</a>,
-assign a probability that a cell is from a particular group, or made up
-of multiple groups (doublet). This allows users to define a cut-off
-threshold for the assignment confidence. Accounting for uncertainty is
-an important feature for these types of algorithms. But, while they give
-the user greater flexibility in determining which cells to keep, this
-ultimately results in a trade-off between keeping cells which cannot be
-confidently called or discarding them - due to issues with tagging
-quality rather than RNA quality.</p>
-</div>
-<div class="section level4">
-<h4 id="snps">SNPs<a class="anchor" aria-label="anchor" href="#snps"></a>
-</h4>
-<p>The second class of methods exploits natural genetic variation
-between cells and so can only be used where the groups are genetically
-distinct. Demuxlet (<span class="citation">Kang et al. (2018)</span>)
-uses genotype information from each group to classify samples. This
-genotyping incurs additional experimental cost. To address this,
-Souporcell (<span class="citation">Heaton et al. (2020)</span>) and
-Vireo (<span class="citation">Huang, McCarthy, and Stegle (2019)</span>)
-among other methods were developed to classify cells based on their SNPs
-in an unsupervised manner. Without prior knowledge of the SNPs
-associated with each group, these unsupervised methods may confuse
-groups with lower cell counts for other signals in the data.</p>
-<p>Demuxlet remains the standard often used to benchmark other methods
-but its more widespread adoption has been limited by the requirement of
-sample genotype information.</p>
-</div>
+<p>Weaknesses (find a better word for this) of existing methods:</p>
+<p>Hashing algorithms can correctly call some but not all cells
+correctly and is highly dependent on the hashing quality</p>
+<p>SNPs algorithms either: require genotype information (demuxlet) which
+incurs additional cost struggle to identify rarer samples (due to lack
+of genotype information)</p>
 </div>
 <div class="section level3">
 <h3 id="demuxsnp-motivation">demuxSNP Motivation<a class="anchor" aria-label="anchor" href="#demuxsnp-motivation"></a>
@@ -246,7 +211,7 @@ refer to relevant documentation.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">small_sce</span><span class="op">$</span><span class="va">knn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Doublet Hashtag1 Hashtag3 Hashtag4 Hashtag5 Hashtag6 </span></span>
-<span><span class="co">#&gt;       25       10       17        7        9       32</span></span></code></pre></div>
+<span><span class="co">#&gt;       26       11       12        7       12       32</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="function-explanation">Function Explanation<a class="anchor" aria-label="anchor" href="#function-explanation"></a>
 </h4>
@@ -766,50 +731,8 @@ see that this most likely is a true Hashtag6.</p>
 <span><span class="co">#&gt; [169] cluster_2.1.4            globals_0.16.2</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-boggy_bff_2022" class="csl-entry">
-Boggy, Gregory J, G W McElfresh, Eisa Mahyari, Abigail B Ventura, Scott
-G Hansen, Louis J Picker, and Benjamin N Bimber. 2022.
-<span>“<span>BFF</span> and <span class="nocase">cellhashR</span>:
-Analysis Tools for Accurate Demultiplexing of Cell Hashing Data.”</span>
-<em>Bioinformatics</em> 38 (10): 2791–801. <a href="https://doi.org/10.1093/bioinformatics/btac213" class="external-link">https://doi.org/10.1093/bioinformatics/btac213</a>.
-</div>
-<div id="ref-heaton_souporcell_2020" class="csl-entry">
-Heaton, Haynes, Arthur M. Talman, Andrew Knights, Maria Imaz, Daniel J.
-Gaffney, Richard Durbin, Martin Hemberg, and Mara K. N. Lawniczak. 2020.
-<span>“Souporcell: Robust Clustering of Single-Cell <span>RNA</span>-Seq
-Data by Genotype Without Reference Genotypes.”</span> <em>Nature
-Methods</em> 17 (6): 615–20. <a href="https://doi.org/10.1038/s41592-020-0820-1" class="external-link">https://doi.org/10.1038/s41592-020-0820-1</a>.
-</div>
-<div id="ref-huang_vireo_2019" class="csl-entry">
-Huang, Yuanhua, Davis J. McCarthy, and Oliver Stegle. 2019.
-<span>“Vireo: <span>Bayesian</span> Demultiplexing of Pooled Single-Cell
-<span>RNA</span>-Seq Data Without Genotype Reference.”</span> <em>Genome
-Biology</em> 20 (1): 273. <a href="https://doi.org/10.1186/s13059-019-1865-2" class="external-link">https://doi.org/10.1186/s13059-019-1865-2</a>.
-</div>
-<div id="ref-kang_multiplexed_2018" class="csl-entry">
-Kang, Hyun Min, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka
-Maliskova, Elizabeth McCarthy, Eunice Wan, et al. 2018.
-<span>“Multiplexed Droplet Single-Cell <span>RNA</span>-Sequencing Using
-Natural Genetic Variation.”</span> <em>Nature Biotechnology</em> 36 (1):
-89–94. <a href="https://doi.org/10.1038/nbt.4042" class="external-link">https://doi.org/10.1038/nbt.4042</a>.
-</div>
-<div id="ref-kim_citefuse_2020" class="csl-entry">
-Kim, Hani Jieun, Yingxin Lin, Thomas A Geddes, Jean Yee Hwa Yang, and
-Pengyi Yang. 2020. <span>“<span>CiteFuse</span> Enables Multi-Modal
-Analysis of <span>CITE</span>-Seq Data.”</span> <em>Bioinformatics</em>
-36 (14): 4137–43. <a href="https://doi.org/10.1093/bioinformatics/btaa282" class="external-link">https://doi.org/10.1093/bioinformatics/btaa282</a>.
-</div>
-<div id="ref-stoeckius_cell_2018" class="csl-entry">
-Stoeckius, Marlon, Shiwei Zheng, Brian Houck-Loomis, Stephanie Hao,
-Bertrand Z. Yeung, William M. Mauck, Peter Smibert, and Rahul Satija.
-2018. <span>“Cell <span>Hashing</span> with Barcoded Antibodies Enables
-Multiplexing and Doublet Detection for Single Cell Genomics.”</span>
-<em>Genome Biology</em> 19 (1): 224. <a href="https://doi.org/10.1186/s13059-018-1603-1" class="external-link">https://doi.org/10.1186/s13059-018-1603-1</a>.
-</div>
-</div>
 </div>
   </div>
 
