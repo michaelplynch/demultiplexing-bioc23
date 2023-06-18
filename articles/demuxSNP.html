@@ -167,7 +167,8 @@ widely applicable.</p>
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<code class="sourceCode R"><span><span class="co">##biocdevel</span></span>
+<span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span></span>
@@ -186,6 +187,7 @@ refer to relevant documentation.</p>
 <div class="section level3">
 <h3 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h3>
+<p>? maybe remove this for demo</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Data loading</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span>, </span>
@@ -211,7 +213,7 @@ refer to relevant documentation.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">small_sce</span><span class="op">$</span><span class="va">knn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Doublet Hashtag1 Hashtag3 Hashtag4 Hashtag5 Hashtag6 </span></span>
-<span><span class="co">#&gt;       26       11       12        7       12       32</span></span></code></pre></div>
+<span><span class="co">#&gt;       24       11       15        7       11       32</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="function-explanation">Function Explanation<a class="anchor" aria-label="anchor" href="#function-explanation"></a>
 </h4>
@@ -258,8 +260,7 @@ matrix using <a href="https://github.com/10XGenomics/vartrix" class="external-li
 We have already removed low quality cells (library size&lt;1,000 and
 percentage of genes mapping to mitochondrial genes&gt;10%).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "SingleCellExperiment"</span></span>
 <span><span class="co">#&gt; attr(,"package")</span></span>
 <span><span class="co">#&gt; [1] "SingleCellExperiment"</span></span>
@@ -282,10 +283,13 @@ demultiplexing algorithm on the data.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/assays.html" class="external-link">logcounts</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
 <span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/as.Seurat.html" class="external-link">as.Seurat</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
 <span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
+<span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/MULTIseqDemux.html" class="external-link">MULTIseqDemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
 <span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span></span>
+<span><span class="va">seurat</span><span class="op">$</span><span class="va">MULTI_ID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">MULTI_ID</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span> <span class="op">&lt;-</span> <span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span></span>
+<span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">multiseq</span><span class="op">&lt;-</span> <span class="va">seurat</span><span class="op">$</span><span class="va">MULTI_ID</span></span>
+<span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -301,6 +305,61 @@ than overall RNA quality.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoPlot.html" class="external-link">dittoPlot</a></span><span class="op">(</span><span class="va">seurat</span>, <span class="st">"nCount_RNA"</span>, group.by <span class="op">=</span> <span class="st">"hash.ID"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="demuxSNP_files/figure-html/unnamed-chunk-10-2.png" width="720"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CiteFuse</span><span class="op">)</span></span>
+<span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/CiteFuse/man/crossSampleDoublets.html" class="external-link">crossSampleDoublets</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
+<span><span class="co">#&gt; number of iterations= 79 </span></span>
+<span><span class="co">#&gt; number of iterations= 60 </span></span>
+<span><span class="co">#&gt; number of iterations= 72 </span></span>
+<span><span class="co">#&gt; number of iterations= 80 </span></span>
+<span><span class="co">#&gt; number of iterations= 49 </span></span>
+<span><span class="co">#&gt; number of iterations= 73</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span>,<span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">doubletClassify_between_label</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           </span></span>
+<span><span class="co">#&gt;              1   2   3   4   5   6 doublet/multiplet negative</span></span>
+<span><span class="co">#&gt;   Doublet    0   0   0   0   0   0               633        0</span></span>
+<span><span class="co">#&gt;   Hashtag1  80   0   0   0   0   0                41        0</span></span>
+<span><span class="co">#&gt;   Hashtag2   0  19   0   0   0   0                10        0</span></span>
+<span><span class="co">#&gt;   Hashtag3   0   0 166   0   0   0                98        0</span></span>
+<span><span class="co">#&gt;   Hashtag4   0   0   0 121   0   0                37        0</span></span>
+<span><span class="co">#&gt;   Hashtag5   0   0   0   0 109   0                68        0</span></span>
+<span><span class="co">#&gt;   Hashtag6   0   0   0   0   0 206               177        0</span></span>
+<span><span class="co">#&gt;   Negative   1   1  20   1 146   3                55        8</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span>,<span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">multiseq</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           </span></span>
+<span><span class="co">#&gt;            Doublet Hashtag1 Hashtag2 Hashtag3 Hashtag4 Hashtag5 Hashtag6</span></span>
+<span><span class="co">#&gt;   Doublet      445       13        5       32       22       41       70</span></span>
+<span><span class="co">#&gt;   Hashtag1       4       99        0        0        0        6        0</span></span>
+<span><span class="co">#&gt;   Hashtag2       1        0       20        0        0        3        0</span></span>
+<span><span class="co">#&gt;   Hashtag3       9        0        0      204        0        2        0</span></span>
+<span><span class="co">#&gt;   Hashtag4       6        0        0        0      135        0        0</span></span>
+<span><span class="co">#&gt;   Hashtag5       0        0        0        0        0      177        0</span></span>
+<span><span class="co">#&gt;   Hashtag6      12        0        0        0        0        0      353</span></span>
+<span><span class="co">#&gt;   Negative       0        0        0        0        0      129        0</span></span>
+<span><span class="co">#&gt;           </span></span>
+<span><span class="co">#&gt;            Negative</span></span>
+<span><span class="co">#&gt;   Doublet         5</span></span>
+<span><span class="co">#&gt;   Hashtag1       12</span></span>
+<span><span class="co">#&gt;   Hashtag2        5</span></span>
+<span><span class="co">#&gt;   Hashtag3       49</span></span>
+<span><span class="co">#&gt;   Hashtag4       17</span></span>
+<span><span class="co">#&gt;   Hashtag5        0</span></span>
+<span><span class="co">#&gt;   Hashtag6       18</span></span>
+<span><span class="co">#&gt;   Negative      106</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">multiseq</span>,<span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">doubletClassify_between_label</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           </span></span>
+<span><span class="co">#&gt;              1   2   3   4   5   6 doublet/multiplet negative</span></span>
+<span><span class="co">#&gt;   Doublet    0   0   0   0   0   0               477        0</span></span>
+<span><span class="co">#&gt;   Hashtag1  68   0   0   0   0   0                44        0</span></span>
+<span><span class="co">#&gt;   Hashtag2   0  15   0   0   0   0                10        0</span></span>
+<span><span class="co">#&gt;   Hashtag3   0   0 125   0   0   0               111        0</span></span>
+<span><span class="co">#&gt;   Hashtag4   0   0   0 109   0   0                48        0</span></span>
+<span><span class="co">#&gt;   Hashtag5   0   0   0   0 202   0               156        0</span></span>
+<span><span class="co">#&gt;   Hashtag6   0   0   0   0   0 193               230        0</span></span>
+<span><span class="co">#&gt;   Negative  13   5  61  13  53  16                43        8</span></span></code></pre></div>
 <p>For the remainder of this vignette we will outline our method of
 checking whether or not these cells have been called correctly and how
 to assign them to their appropriate group!</p>
@@ -313,7 +372,7 @@ contain over 7 million SNPs. To reduce computational cost and cell-type
 effects, we subset our SNPs list to those located within genes expressed
 across most cells in our data.</p>
 <p>We first find the most commonly expressed genes in our RNA data.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/demuxSNP/man/common_genes.html" class="external-link">common_genes</a></span><span class="op">(</span>sce <span class="op">=</span> <span class="va">multiplexed_scrnaseq_sce</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">top_genes</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
@@ -326,7 +385,7 @@ from our dataset. Notice that the genome for the vcf and EnsDb object
 must be compatible!</p>
 <p>The returned vcf can be written to file and used with VarTrix later
 on.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ensdb</span> <span class="op">&lt;-</span> <span class="fu">EnsDb.Hsapiens.v86</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/EnsDb.Hsapiens.v86/man/package.html" class="external-link">EnsDb.Hsapiens.v86</a></span></span>
 <span></span>
 <span><span class="fu">genome</span><span class="op">(</span><span class="va">commonvariants_1kgenomes_subset</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fu">genome</span><span class="op">(</span><span class="va">ensdb</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -369,7 +428,7 @@ to experiment with different approaches. Here we have used <a href="https://bioc
 a probabilistic model which we have set with a high acceptance threshold
 to identify high confidence cell calls to use as training data (cells
 which we can confidently call as a particular singlet group).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiplexed_scrnaseq_sce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/demuxSNP/man/high_conf_calls.html" class="external-link">high_conf_calls</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">train</span><span class="op">)</span></span>
@@ -400,8 +459,8 @@ reader to <a href="https://github.com/10XGenomics/vartrix" class="external-link"
 where they can use the subsetted .vcf file along with their .bam,
 barcodes.tsv and reference genome to call SNPs in each cell.</p>
 <p>A sample VarTrix command looks like the following:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="ex">./vartrix</span> <span class="at">-v</span> <span class="op">&lt;</span>path_to_input_vcf<span class="op">&gt;</span> -b <span class="op">&lt;</span>path_to_cellranger_bam<span class="op">&gt;</span> -f <span class="op">&lt;</span>path_to_fasta_file<span class="op">&gt;</span> -c <span class="op">&lt;</span>path_to_cell_barcodes_file<span class="op">&gt;</span> -o <span class="op">&lt;</span>path_for_output_matrix<span class="op">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="ex">./vartrix</span> <span class="at">-v</span> <span class="op">&lt;</span>path_to_input_vcf<span class="op">&gt;</span> -b <span class="op">&lt;</span>path_to_cellranger_bam<span class="op">&gt;</span> -f <span class="op">&lt;</span>path_to_fasta_file<span class="op">&gt;</span> -c <span class="op">&lt;</span>path_to_cell_barcodes_file<span class="op">&gt;</span> -o <span class="op">&lt;</span>path_for_output_matrix<span class="op">&gt;</span></span></code></pre></div>
 <p>Using the output matrix from Vartrix and the high confidence
 classifications from the HTO algorithm, we can reassign cells using
 k-nearest neighbours.</p>
@@ -414,7 +473,7 @@ SingleCellExperiment object as an altExp. We recode the SNP matrix as
 follows: 0=no read, 1=SNP present, -1=SNP absent. This function also
 filters out SNPs which are observed at a low frequency in the data, and
 the frequency threshold can be set manually.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">vartrix_consensus_snps</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2542 2000</span></span>
 <span></span>
@@ -439,7 +498,7 @@ by Seurat HTODemux classification, we initially see a large number of
 ‘negative’ cells which appear of good quality (high proportion of reads)
 which may be assignable to another group. This is consistent with the
 library size plot we visualised earlier.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExp</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span>, <span class="st">"SNP"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    column_split <span class="op">=</span> <span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span>,</span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -455,10 +514,10 @@ library size plot we visualised earlier.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"SNP profiles split by Seurat HTODemux call"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-16-1.png" width="720"></p>
+<p><img src="demuxSNP_files/figure-html/unnamed-chunk-17-1.png" width="720"></p>
 <p>We will use our knn method to reassign cells based on their SNP
 profiles. The training data is the high confidence cells</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">multiplexed_scrnaseq_sce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/demuxSNP/man/reassign.html" class="external-link">reassign</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span>,</span>
 <span>    k <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -471,7 +530,7 @@ profiles. The training data is the high confidence cells</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Doublet Hashtag1 Hashtag2 Hashtag3 Hashtag4 Hashtag5 Hashtag6 </span></span>
 <span><span class="co">#&gt;      337      119       30      349      174      464      527</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExp</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span>, <span class="st">"SNP"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    column_split <span class="op">=</span> <span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">knn</span>,</span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -488,11 +547,11 @@ profiles. The training data is the high confidence cells</p>
 <span>    column_title <span class="op">=</span> <span class="st">"SNP profiles split by updated knn classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-18-1.png" width="720"></p>
+<p><img src="demuxSNP_files/figure-html/unnamed-chunk-19-1.png" width="720"></p>
 <p>Focusing in on the knn Hashtag5 group, we see that a lot of the
 Negative cells have now been correctly reclassed to this group, as well
 as a small number of cells from other groups.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExp</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span>, <span class="st">"SNP"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>, <span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">knn</span> <span class="op">==</span> <span class="st">"Hashtag5"</span><span class="op">]</span>,</span>
 <span>    column_split <span class="op">=</span> <span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">seurat</span><span class="op">[</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">knn</span> <span class="op">==</span> <span class="st">"Hashtag5"</span><span class="op">]</span>,</span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -509,7 +568,7 @@ as a small number of cells from other groups.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"knn Hashtag5 group split by Seurat HTODemux classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-19-1.png" width="720"></p>
+<p><img src="demuxSNP_files/figure-html/unnamed-chunk-20-1.png" width="720"></p>
 <div class="section level3">
 <h3 id="performance">Performance<a class="anchor" aria-label="anchor" href="#performance"></a>
 </h3>
@@ -517,20 +576,21 @@ as a small number of cells from other groups.</p>
 SingleCellExperiment object to only retain cells which we could
 confidently call as being from a singlet group, then split this into a
 training and test dataset.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_test</span> <span class="op">&lt;-</span> <span class="va">multiplexed_scrnaseq_sce</span><span class="op">[</span>, <span class="va">multiplexed_scrnaseq_sce</span><span class="op">$</span><span class="va">train</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span></span>
 <span><span class="va">sce_test</span><span class="op">$</span><span class="va">knn</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span></span>
 <span><span class="va">sce_test</span></span>
 <span><span class="co">#&gt; class: SingleCellExperiment </span></span>
 <span><span class="co">#&gt; dim: 259 1045 </span></span>
-<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="co">#&gt; metadata(2): doubletClassify_between_threshold</span></span>
+<span><span class="co">#&gt;   doubletClassify_between_resultsMat</span></span>
 <span><span class="co">#&gt; assays(2): counts logcounts</span></span>
 <span><span class="co">#&gt; rownames(259): RPL22 CDC42 ... MT-ND5 MT-CYB</span></span>
 <span><span class="co">#&gt; rowData names(0):</span></span>
 <span><span class="co">#&gt; colnames(1045): AAACCTGAGCGTCAAG-1 AAACCTGAGGCGTACA-1 ...</span></span>
 <span><span class="co">#&gt;   ACTTTCAGTAAGAGAG-1 ACTTTCAGTAAGTTCC-1</span></span>
-<span><span class="co">#&gt; colData names(11): orig.ident nCount_RNA ... predict labels</span></span>
+<span><span class="co">#&gt; colData names(14): orig.ident nCount_RNA ... predict labels</span></span>
 <span><span class="co">#&gt; reducedDimNames(0):</span></span>
 <span><span class="co">#&gt; mainExpName: RNA</span></span>
 <span><span class="co">#&gt; altExpNames(2): HTO SNP</span></span>
@@ -541,7 +601,7 @@ training and test dataset.</p>
 <span><span class="va">sce_test</span><span class="op">$</span><span class="va">test</span> <span class="op">&lt;-</span> <span class="va">sce_test</span><span class="op">$</span><span class="va">train2</span> <span class="op">==</span> <span class="cn">FALSE</span></span></code></pre></div>
 <p>Comparing the predicted labels in the test dataset with the hidden
 high confidence labels, we see excellent agreement.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/demuxSNP/man/reassign.html" class="external-link">reassign</a></span><span class="op">(</span><span class="va">sce_test</span>, k <span class="op">=</span> <span class="fl">3</span>, train_cells <span class="op">=</span> <span class="va">sce_test</span><span class="op">$</span><span class="va">train2</span>, predict_cells <span class="op">=</span> <span class="va">sce_test</span><span class="op">$</span><span class="va">test</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span><span class="op">[</span><span class="va">sce_test</span><span class="op">$</span><span class="va">test</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span>, <span class="va">sce_test</span><span class="op">$</span><span class="va">knn</span><span class="op">[</span><span class="va">sce_test</span><span class="op">$</span><span class="va">test</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span></span>
@@ -557,7 +617,7 @@ high confidence labels, we see excellent agreement.</p>
 when predicted back on the training data. We create a new vector
 “labels2” which is initially identical to the labels used in training
 previously.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_test</span><span class="op">$</span><span class="va">knn</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span></span>
 <span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span><span class="op">)</span></span>
@@ -575,7 +635,7 @@ previously.</p>
 training data. Predicting the model back on itself we see that in the
 new predicted labels, the 25 altered have been correctly reclassified
 back to Hashtag5</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels2</span> <span class="op">==</span> <span class="st">"Hashtag5"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Hashtag2"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span>, <span class="va">sce_test</span><span class="op">$</span><span class="va">labels2</span><span class="op">)</span></span>
@@ -607,7 +667,7 @@ original demuxmix labels. However, it appears one cell now being called
 a Hashtag6 was originally called Hashtag5. Again, we can investigate
 this by visualising the corresponding SNP profile. In doing so, we can
 see that this most likely is a true Hashtag6.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExp</a></span><span class="op">(</span><span class="va">sce_test</span>, <span class="st">"SNP"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>, <span class="va">sce_test</span><span class="op">$</span><span class="va">knn</span> <span class="op">==</span> <span class="st">"Hashtag6"</span><span class="op">]</span>,</span>
 <span>    column_split <span class="op">=</span> <span class="va">sce_test</span><span class="op">$</span><span class="va">labels</span><span class="op">[</span><span class="va">sce_test</span><span class="op">$</span><span class="va">knn</span> <span class="op">==</span> <span class="st">"Hashtag6"</span><span class="op">]</span>,</span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -624,13 +684,13 @@ see that this most likely is a true Hashtag6.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"knn Hashtag6 group split by demuxmix classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-24-1.png" width="720"></p>
+<p><img src="demuxSNP_files/figure-html/unnamed-chunk-25-1.png" width="720"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -656,79 +716,126 @@ see that this most likely is a true Hashtag6.</p>
 <span><span class="co">#&gt; [8] methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] EnsDb.Hsapiens.v86_2.99.0   dittoSeq_1.12.0            </span></span>
-<span><span class="co">#&gt;  [3] ggpubr_0.6.0                ggplot2_3.4.2              </span></span>
-<span><span class="co">#&gt;  [5] SeuratObject_4.1.3          Seurat_4.3.0               </span></span>
-<span><span class="co">#&gt;  [7] viridisLite_0.4.2           ComplexHeatmap_2.16.0      </span></span>
-<span><span class="co">#&gt;  [9] demuxSNP_0.99.10            ensembldb_2.24.0           </span></span>
-<span><span class="co">#&gt; [11] AnnotationFilter_1.24.0     GenomicFeatures_1.52.0     </span></span>
-<span><span class="co">#&gt; [13] AnnotationDbi_1.62.1        VariantAnnotation_1.46.0   </span></span>
-<span><span class="co">#&gt; [15] Rsamtools_2.16.0            Biostrings_2.68.1          </span></span>
-<span><span class="co">#&gt; [17] XVector_0.40.0              SingleCellExperiment_1.22.0</span></span>
-<span><span class="co">#&gt; [19] SummarizedExperiment_1.30.2 Biobase_2.60.0             </span></span>
-<span><span class="co">#&gt; [21] GenomicRanges_1.52.0        GenomeInfoDb_1.36.0        </span></span>
-<span><span class="co">#&gt; [23] IRanges_2.34.0              S4Vectors_0.38.1           </span></span>
-<span><span class="co">#&gt; [25] BiocGenerics_0.46.0         MatrixGenerics_1.12.2      </span></span>
-<span><span class="co">#&gt; [27] matrixStats_1.0.0           BiocStyle_2.28.0           </span></span>
+<span><span class="co">#&gt;  [1] CiteFuse_1.12.0             EnsDb.Hsapiens.v86_2.99.0  </span></span>
+<span><span class="co">#&gt;  [3] dittoSeq_1.12.0             ggpubr_0.6.0               </span></span>
+<span><span class="co">#&gt;  [5] ggplot2_3.4.2               SeuratObject_4.1.3         </span></span>
+<span><span class="co">#&gt;  [7] Seurat_4.3.0                viridisLite_0.4.2          </span></span>
+<span><span class="co">#&gt;  [9] ComplexHeatmap_2.16.0       demuxSNP_0.99.10           </span></span>
+<span><span class="co">#&gt; [11] ensembldb_2.24.0            AnnotationFilter_1.24.0    </span></span>
+<span><span class="co">#&gt; [13] GenomicFeatures_1.52.0      AnnotationDbi_1.62.1       </span></span>
+<span><span class="co">#&gt; [15] VariantAnnotation_1.46.0    Rsamtools_2.16.0           </span></span>
+<span><span class="co">#&gt; [17] Biostrings_2.68.1           XVector_0.40.0             </span></span>
+<span><span class="co">#&gt; [19] SingleCellExperiment_1.22.0 SummarizedExperiment_1.30.2</span></span>
+<span><span class="co">#&gt; [21] Biobase_2.60.0              GenomicRanges_1.52.0       </span></span>
+<span><span class="co">#&gt; [23] GenomeInfoDb_1.36.0         IRanges_2.34.0             </span></span>
+<span><span class="co">#&gt; [25] S4Vectors_0.38.1            BiocGenerics_0.46.0        </span></span>
+<span><span class="co">#&gt; [27] MatrixGenerics_1.12.2       matrixStats_1.0.0          </span></span>
+<span><span class="co">#&gt; [29] BiocStyle_2.28.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] fs_1.6.2                 ProtGenerics_1.32.0      spatstat.sparse_3.0-1   </span></span>
-<span><span class="co">#&gt;   [4] bitops_1.0-7             httr_1.4.6               RColorBrewer_1.1-3      </span></span>
-<span><span class="co">#&gt;   [7] doParallel_1.0.17        ggsci_3.0.0              tools_4.3.1             </span></span>
-<span><span class="co">#&gt;  [10] sctransform_0.3.5        backports_1.4.1          utf8_1.2.3              </span></span>
-<span><span class="co">#&gt;  [13] R6_2.5.1                 lazyeval_0.2.2           uwot_0.1.14             </span></span>
-<span><span class="co">#&gt;  [16] GetoptLong_1.0.5         withr_2.5.0              sp_1.6-1                </span></span>
-<span><span class="co">#&gt;  [19] prettyunits_1.1.1        gridExtra_2.3            progressr_0.13.0        </span></span>
-<span><span class="co">#&gt;  [22] cli_3.6.1                textshaping_0.3.6        spatstat.explore_3.2-1  </span></span>
-<span><span class="co">#&gt;  [25] labeling_0.4.2           sass_0.4.6               spatstat.data_3.0-1     </span></span>
-<span><span class="co">#&gt;  [28] ggridges_0.5.4           pbapply_1.7-0            pkgdown_2.0.7           </span></span>
-<span><span class="co">#&gt;  [31] systemfonts_1.0.4        parallelly_1.36.0        BSgenome_1.68.0         </span></span>
-<span><span class="co">#&gt;  [34] RSQLite_2.3.1            generics_0.1.3           shape_1.4.6             </span></span>
-<span><span class="co">#&gt;  [37] BiocIO_1.10.0            combinat_0.0-8           ica_1.0-3               </span></span>
-<span><span class="co">#&gt;  [40] spatstat.random_3.1-5    car_3.1-2                dplyr_1.1.2             </span></span>
-<span><span class="co">#&gt;  [43] Matrix_1.5-4.1           fansi_1.0.4              abind_1.4-5             </span></span>
-<span><span class="co">#&gt;  [46] lifecycle_1.0.3          yaml_2.3.7               carData_3.0-5           </span></span>
-<span><span class="co">#&gt;  [49] BiocFileCache_2.8.0      Rtsne_0.16               blob_1.2.4              </span></span>
-<span><span class="co">#&gt;  [52] promises_1.2.0.1         crayon_1.5.2             miniUI_0.1.1.1          </span></span>
-<span><span class="co">#&gt;  [55] lattice_0.21-8           cowplot_1.1.1            KEGGREST_1.40.0         </span></span>
-<span><span class="co">#&gt;  [58] demuxmix_1.2.0           pillar_1.9.0             knitr_1.43              </span></span>
-<span><span class="co">#&gt;  [61] rjson_0.2.21             future.apply_1.11.0      codetools_0.2-19        </span></span>
-<span><span class="co">#&gt;  [64] leiden_0.4.3             glue_1.6.2               data.table_1.14.8       </span></span>
-<span><span class="co">#&gt;  [67] vctrs_0.6.3              png_0.1-8                gtable_0.3.3            </span></span>
-<span><span class="co">#&gt;  [70] cachem_1.0.8             xfun_0.39                S4Arrays_1.0.4          </span></span>
-<span><span class="co">#&gt;  [73] mime_0.12                survival_3.5-5           pheatmap_1.0.12         </span></span>
-<span><span class="co">#&gt;  [76] iterators_1.0.14         ellipsis_0.3.2           fitdistrplus_1.1-11     </span></span>
-<span><span class="co">#&gt;  [79] ROCR_1.0-11              nlme_3.1-162             bit64_4.0.5             </span></span>
-<span><span class="co">#&gt;  [82] progress_1.2.2           filelock_1.0.2           RcppAnnoy_0.0.20        </span></span>
-<span><span class="co">#&gt;  [85] rprojroot_2.0.3          bslib_0.5.0              irlba_2.3.5.1           </span></span>
-<span><span class="co">#&gt;  [88] KernSmooth_2.23-21       colorspace_2.1-0         DBI_1.1.3               </span></span>
-<span><span class="co">#&gt;  [91] tidyselect_1.2.0         bit_4.0.5                compiler_4.3.1          </span></span>
-<span><span class="co">#&gt;  [94] curl_5.0.1               xml2_1.3.4               desc_1.4.2              </span></span>
-<span><span class="co">#&gt;  [97] DelayedArray_0.26.3      plotly_4.10.2            bookdown_0.34           </span></span>
-<span><span class="co">#&gt; [100] rtracklayer_1.60.0       scales_1.2.1             lmtest_0.9-40           </span></span>
-<span><span class="co">#&gt; [103] rappdirs_0.3.3           stringr_1.5.0            digest_0.6.31           </span></span>
-<span><span class="co">#&gt; [106] goftest_1.2-3            spatstat.utils_3.0-3     rmarkdown_2.22          </span></span>
-<span><span class="co">#&gt; [109] htmltools_0.5.5          pkgconfig_2.0.3          highr_0.10              </span></span>
-<span><span class="co">#&gt; [112] dbplyr_2.3.2             fastmap_1.1.1            rlang_1.1.1             </span></span>
-<span><span class="co">#&gt; [115] GlobalOptions_0.1.2      htmlwidgets_1.6.2        shiny_1.7.4             </span></span>
-<span><span class="co">#&gt; [118] farver_2.1.1             jquerylib_0.1.4          zoo_1.8-12              </span></span>
-<span><span class="co">#&gt; [121] jsonlite_1.8.5           BiocParallel_1.34.2      RCurl_1.98-1.12         </span></span>
-<span><span class="co">#&gt; [124] magrittr_2.0.3           GenomeInfoDbData_1.2.10  patchwork_1.1.2         </span></span>
-<span><span class="co">#&gt; [127] munsell_0.5.0            Rcpp_1.0.10              reticulate_1.30         </span></span>
-<span><span class="co">#&gt; [130] stringi_1.7.12           zlibbioc_1.46.0          MASS_7.3-60             </span></span>
-<span><span class="co">#&gt; [133] plyr_1.8.8               parallel_4.3.1           listenv_0.9.0           </span></span>
-<span><span class="co">#&gt; [136] ggrepel_0.9.3            deldir_1.0-9             splines_4.3.1           </span></span>
-<span><span class="co">#&gt; [139] tensor_1.5               hms_1.1.3                circlize_0.4.15         </span></span>
-<span><span class="co">#&gt; [142] igraph_1.5.0             spatstat.geom_3.2-1      ggsignif_0.6.4          </span></span>
-<span><span class="co">#&gt; [145] reshape2_1.4.4           biomaRt_2.56.1           XML_3.99-0.14           </span></span>
-<span><span class="co">#&gt; [148] evaluate_0.21            BiocManager_1.30.21      foreach_1.5.2           </span></span>
-<span><span class="co">#&gt; [151] httpuv_1.6.11            RANN_2.6.1               tidyr_1.3.0             </span></span>
-<span><span class="co">#&gt; [154] purrr_1.0.1              polyclip_1.10-4          future_1.32.0           </span></span>
-<span><span class="co">#&gt; [157] clue_0.3-64              scattermore_1.2          broom_1.0.5             </span></span>
-<span><span class="co">#&gt; [160] xtable_1.8-4             restfulr_0.0.15          rstatix_0.7.2           </span></span>
-<span><span class="co">#&gt; [163] later_1.3.1              class_7.3-22             ragg_1.2.5              </span></span>
-<span><span class="co">#&gt; [166] tibble_3.2.1             memoise_2.0.1            GenomicAlignments_1.36.0</span></span>
-<span><span class="co">#&gt; [169] cluster_2.1.4            globals_0.16.2</span></span></code></pre></div>
+<span><span class="co">#&gt;   [1] segmented_1.6-4           fs_1.6.2                 </span></span>
+<span><span class="co">#&gt;   [3] ProtGenerics_1.32.0       spatstat.sparse_3.0-1    </span></span>
+<span><span class="co">#&gt;   [5] bitops_1.0-7              httr_1.4.6               </span></span>
+<span><span class="co">#&gt;   [7] RColorBrewer_1.1-3        doParallel_1.0.17        </span></span>
+<span><span class="co">#&gt;   [9] ggsci_3.0.0               tools_4.3.1              </span></span>
+<span><span class="co">#&gt;  [11] sctransform_0.3.5         backports_1.4.1          </span></span>
+<span><span class="co">#&gt;  [13] utf8_1.2.3                R6_2.5.1                 </span></span>
+<span><span class="co">#&gt;  [15] lazyeval_0.2.2            uwot_0.1.14              </span></span>
+<span><span class="co">#&gt;  [17] rhdf5filters_1.12.1       GetoptLong_1.0.5         </span></span>
+<span><span class="co">#&gt;  [19] withr_2.5.0               sp_1.6-1                 </span></span>
+<span><span class="co">#&gt;  [21] prettyunits_1.1.1         gridExtra_2.3            </span></span>
+<span><span class="co">#&gt;  [23] bayesm_3.1-5              progressr_0.13.0         </span></span>
+<span><span class="co">#&gt;  [25] cli_3.6.1                 textshaping_0.3.6        </span></span>
+<span><span class="co">#&gt;  [27] spatstat.explore_3.2-1    labeling_0.4.2           </span></span>
+<span><span class="co">#&gt;  [29] sass_0.4.6                robustbase_0.99-0        </span></span>
+<span><span class="co">#&gt;  [31] spatstat.data_3.0-1       randomForest_4.7-1.1     </span></span>
+<span><span class="co">#&gt;  [33] ggridges_0.5.4            pbapply_1.7-0            </span></span>
+<span><span class="co">#&gt;  [35] pkgdown_2.0.7             systemfonts_1.0.4        </span></span>
+<span><span class="co">#&gt;  [37] dbscan_1.1-11             parallelly_1.36.0        </span></span>
+<span><span class="co">#&gt;  [39] limma_3.56.2              BSgenome_1.68.0          </span></span>
+<span><span class="co">#&gt;  [41] RSQLite_2.3.1             generics_0.1.3           </span></span>
+<span><span class="co">#&gt;  [43] shape_1.4.6               BiocIO_1.10.0            </span></span>
+<span><span class="co">#&gt;  [45] combinat_0.0-8            ica_1.0-3                </span></span>
+<span><span class="co">#&gt;  [47] spatstat.random_3.1-5     car_3.1-2                </span></span>
+<span><span class="co">#&gt;  [49] dplyr_1.1.2               Matrix_1.5-4.1           </span></span>
+<span><span class="co">#&gt;  [51] fansi_1.0.4               abind_1.4-5              </span></span>
+<span><span class="co">#&gt;  [53] lifecycle_1.0.3           edgeR_3.42.4             </span></span>
+<span><span class="co">#&gt;  [55] yaml_2.3.7                carData_3.0-5            </span></span>
+<span><span class="co">#&gt;  [57] rhdf5_2.44.0              BiocFileCache_2.8.0      </span></span>
+<span><span class="co">#&gt;  [59] Rtsne_0.16                blob_1.2.4               </span></span>
+<span><span class="co">#&gt;  [61] dqrng_0.3.0               promises_1.2.0.1         </span></span>
+<span><span class="co">#&gt;  [63] crayon_1.5.2              miniUI_0.1.1.1           </span></span>
+<span><span class="co">#&gt;  [65] lattice_0.21-8            beachmat_2.16.0          </span></span>
+<span><span class="co">#&gt;  [67] cowplot_1.1.1             KEGGREST_1.40.0          </span></span>
+<span><span class="co">#&gt;  [69] demuxmix_1.2.0            metapod_1.8.0            </span></span>
+<span><span class="co">#&gt;  [71] pillar_1.9.0              knitr_1.43               </span></span>
+<span><span class="co">#&gt;  [73] rjson_0.2.21              future.apply_1.11.0      </span></span>
+<span><span class="co">#&gt;  [75] codetools_0.2-19          leiden_0.4.3             </span></span>
+<span><span class="co">#&gt;  [77] glue_1.6.2                data.table_1.14.8        </span></span>
+<span><span class="co">#&gt;  [79] vctrs_0.6.3               png_0.1-8                </span></span>
+<span><span class="co">#&gt;  [81] gtable_0.3.3              kernlab_0.9-32           </span></span>
+<span><span class="co">#&gt;  [83] cachem_1.0.8              xfun_0.39                </span></span>
+<span><span class="co">#&gt;  [85] S4Arrays_1.0.4            mime_0.12                </span></span>
+<span><span class="co">#&gt;  [87] tidygraph_1.2.3           survival_3.5-5           </span></span>
+<span><span class="co">#&gt;  [89] pheatmap_1.0.12           iterators_1.0.14         </span></span>
+<span><span class="co">#&gt;  [91] statmod_1.5.0             bluster_1.10.0           </span></span>
+<span><span class="co">#&gt;  [93] ellipsis_0.3.2            fitdistrplus_1.1-11      </span></span>
+<span><span class="co">#&gt;  [95] ROCR_1.0-11               nlme_3.1-162             </span></span>
+<span><span class="co">#&gt;  [97] bit64_4.0.5               progress_1.2.2           </span></span>
+<span><span class="co">#&gt;  [99] filelock_1.0.2            RcppAnnoy_0.0.20         </span></span>
+<span><span class="co">#&gt; [101] rprojroot_2.0.3           tensorA_0.36.2           </span></span>
+<span><span class="co">#&gt; [103] bslib_0.5.0               irlba_2.3.5.1            </span></span>
+<span><span class="co">#&gt; [105] KernSmooth_2.23-21        colorspace_2.1-0         </span></span>
+<span><span class="co">#&gt; [107] DBI_1.1.3                 tidyselect_1.2.0         </span></span>
+<span><span class="co">#&gt; [109] bit_4.0.5                 compiler_4.3.1           </span></span>
+<span><span class="co">#&gt; [111] curl_5.0.1                compositions_2.0-6       </span></span>
+<span><span class="co">#&gt; [113] BiocNeighbors_1.18.0      xml2_1.3.4               </span></span>
+<span><span class="co">#&gt; [115] desc_1.4.2                DelayedArray_0.26.3      </span></span>
+<span><span class="co">#&gt; [117] plotly_4.10.2             bookdown_0.34            </span></span>
+<span><span class="co">#&gt; [119] rtracklayer_1.60.0        scales_1.2.1             </span></span>
+<span><span class="co">#&gt; [121] DEoptimR_1.0-14           lmtest_0.9-40            </span></span>
+<span><span class="co">#&gt; [123] rappdirs_0.3.3            stringr_1.5.0            </span></span>
+<span><span class="co">#&gt; [125] digest_0.6.31             goftest_1.2-3            </span></span>
+<span><span class="co">#&gt; [127] mixtools_2.0.0            spatstat.utils_3.0-3     </span></span>
+<span><span class="co">#&gt; [129] rmarkdown_2.22            htmltools_0.5.5          </span></span>
+<span><span class="co">#&gt; [131] pkgconfig_2.0.3           sparseMatrixStats_1.12.0 </span></span>
+<span><span class="co">#&gt; [133] highr_0.10                dbplyr_2.3.2             </span></span>
+<span><span class="co">#&gt; [135] fastmap_1.1.1             rlang_1.1.1              </span></span>
+<span><span class="co">#&gt; [137] GlobalOptions_0.1.2       htmlwidgets_1.6.2        </span></span>
+<span><span class="co">#&gt; [139] DelayedMatrixStats_1.22.1 shiny_1.7.4              </span></span>
+<span><span class="co">#&gt; [141] farver_2.1.1              jquerylib_0.1.4          </span></span>
+<span><span class="co">#&gt; [143] zoo_1.8-12                jsonlite_1.8.5           </span></span>
+<span><span class="co">#&gt; [145] BiocParallel_1.34.2       BiocSingular_1.16.0      </span></span>
+<span><span class="co">#&gt; [147] RCurl_1.98-1.12           magrittr_2.0.3           </span></span>
+<span><span class="co">#&gt; [149] scuttle_1.10.1            GenomeInfoDbData_1.2.10  </span></span>
+<span><span class="co">#&gt; [151] patchwork_1.1.2           Rhdf5lib_1.22.0          </span></span>
+<span><span class="co">#&gt; [153] munsell_0.5.0             Rcpp_1.0.10              </span></span>
+<span><span class="co">#&gt; [155] viridis_0.6.3             reticulate_1.30          </span></span>
+<span><span class="co">#&gt; [157] stringi_1.7.12            ggraph_2.1.0             </span></span>
+<span><span class="co">#&gt; [159] zlibbioc_1.46.0           MASS_7.3-60              </span></span>
+<span><span class="co">#&gt; [161] plyr_1.8.8                parallel_4.3.1           </span></span>
+<span><span class="co">#&gt; [163] listenv_0.9.0             ggrepel_0.9.3            </span></span>
+<span><span class="co">#&gt; [165] deldir_1.0-9              graphlayouts_1.0.0       </span></span>
+<span><span class="co">#&gt; [167] splines_4.3.1             tensor_1.5               </span></span>
+<span><span class="co">#&gt; [169] hms_1.1.3                 circlize_0.4.15          </span></span>
+<span><span class="co">#&gt; [171] locfit_1.5-9.8            igraph_1.5.0             </span></span>
+<span><span class="co">#&gt; [173] spatstat.geom_3.2-1       ggsignif_0.6.4           </span></span>
+<span><span class="co">#&gt; [175] ScaledMatrix_1.8.1        reshape2_1.4.4           </span></span>
+<span><span class="co">#&gt; [177] biomaRt_2.56.1            XML_3.99-0.14            </span></span>
+<span><span class="co">#&gt; [179] evaluate_0.21             scran_1.28.1             </span></span>
+<span><span class="co">#&gt; [181] BiocManager_1.30.21       tweenr_2.0.2             </span></span>
+<span><span class="co">#&gt; [183] foreach_1.5.2             httpuv_1.6.11            </span></span>
+<span><span class="co">#&gt; [185] RANN_2.6.1                tidyr_1.3.0              </span></span>
+<span><span class="co">#&gt; [187] purrr_1.0.1               polyclip_1.10-4          </span></span>
+<span><span class="co">#&gt; [189] future_1.32.0             clue_0.3-64              </span></span>
+<span><span class="co">#&gt; [191] scattermore_1.2           ggforce_0.4.1            </span></span>
+<span><span class="co">#&gt; [193] rsvd_1.0.5                broom_1.0.5              </span></span>
+<span><span class="co">#&gt; [195] xtable_1.8-4              restfulr_0.0.15          </span></span>
+<span><span class="co">#&gt; [197] rstatix_0.7.2             later_1.3.1              </span></span>
+<span><span class="co">#&gt; [199] class_7.3-22              ragg_1.2.5               </span></span>
+<span><span class="co">#&gt; [201] tibble_3.2.1              memoise_2.0.1            </span></span>
+<span><span class="co">#&gt; [203] GenomicAlignments_1.36.0  cluster_2.1.4            </span></span>
+<span><span class="co">#&gt; [205] globals_0.16.2</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
