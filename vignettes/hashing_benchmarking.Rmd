@@ -36,12 +36,31 @@ library(EnsDb.Hsapiens.v86)
 colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 ```
 
+````{r}
+
+source('../R/which_signal.R')
+source('../R/draw_counts.R')
+
+````
 # Benchmarking cell hashing based methods
 
 Testing algorithms on real data is a key step to evaluating their true performance.
 Real data includes nuances and factors which may not have been foreseen when developing the algorithm.
 However, in scRNAseq, the cost associated with running benchmark limits the amount of suitable benchmarking data.
 To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions, mostly around reducing hashing quality.
+
+short example:
+
+````{r}
+
+mat<-logimat(ngroups=2,nsinglet=c(20,20),ndoub=10,nneg=4)
+library(ComplexHeatmap)
+Heatmap(mat)
+
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(20,2),mu_bg = rep(5,2),mat=mat,seed=1)
+Heatmap(counts)
+````
+
 
 # Session Info
 
