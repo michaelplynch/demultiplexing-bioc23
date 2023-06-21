@@ -50,13 +50,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/demuxSNP.html">demuxSNP: supervised demultiplexing using cell hashing and SNPs</a>
+      <a href="../articles/a-intro-to-demultiplexing.html">Intro to scRNAseq and demultiplexing</a>
     </li>
     <li>
-      <a href="../articles/hashing_benchmarking.html">Simulated benchmarking of hashing based algorithms</a>
+      <a href="../articles/b-hashing-benchmarking.html">Simulated benchmarking of hashing based algorithms</a>
     </li>
     <li>
-      <a href="../articles/intro-to-demultiplexing.html">Intro to scRNAseq and demultiplexing</a>
+      <a href="../articles/c-demuxSNP-package-demo.html">demuxSNP: supervised demultiplexing using cell hashing and SNPs</a>
     </li>
   </ul>
 </li>
@@ -90,8 +90,8 @@ Lynch</h4>
 Limerick<br><h4 data-toc-skip class="author">Aedin
 Culhane</h4>
             <address class="author_afil">
-      University of Limerick<br><small class="dont-index">Source: <a href="https://github.com/michaelplynch/demultiplexing-bioc23/blob/HEAD/vignettes/demuxSNP.Rmd" class="external-link"><code>vignettes/demuxSNP.Rmd</code></a></small>
-      <div class="hidden name"><code>demuxSNP.Rmd</code></div>
+      University of Limerick<br><small class="dont-index">Source: <a href="https://github.com/michaelplynch/demultiplexing-bioc23/blob/HEAD/vignettes/c-demuxSNP-package-demo.Rmd" class="external-link"><code>vignettes/c-demuxSNP-package-demo.Rmd</code></a></small>
+      <div class="hidden name"><code>c-demuxSNP-package-demo.Rmd</code></div>
 
     </address>
 </address>
@@ -213,7 +213,7 @@ refer to relevant documentation.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">small_sce</span><span class="op">$</span><span class="va">knn</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Doublet Hashtag1 Hashtag3 Hashtag4 Hashtag5 Hashtag6 </span></span>
-<span><span class="co">#&gt;       23        9       17        7       12       32</span></span></code></pre></div>
+<span><span class="co">#&gt;       22        9       17        7       13       32</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="function-explanation">Function Explanation<a class="anchor" aria-label="anchor" href="#function-explanation"></a>
 </h4>
@@ -276,7 +276,7 @@ binding. Ideally, these distributions would be clearly separated with no
 overlap, but in practice, this is not always the case. In our example
 data, we see that the signal and noise overlap to varying extents in
 each group.</p>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-8-1.png" width="816"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-8-1.png" width="816"></p>
 <p>We will begin by running Seurat’s HTODemux, a popular HTO
 demultiplexing algorithm on the data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -301,10 +301,10 @@ may be misclassified as Negative due to their tagging quality rather
 than overall RNA quality.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoPlot.html" class="external-link">dittoPlot</a></span><span class="op">(</span><span class="va">seurat</span>, <span class="st">"nCount_HTO"</span>, group.by <span class="op">=</span> <span class="st">"hash.ID"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-10-1.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-10-1.png" width="720"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoPlot.html" class="external-link">dittoPlot</a></span><span class="op">(</span><span class="va">seurat</span>, <span class="st">"nCount_RNA"</span>, group.by <span class="op">=</span> <span class="st">"hash.ID"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-10-2.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-10-2.png" width="720"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CiteFuse</span><span class="op">)</span></span>
 <span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/CiteFuse/man/crossSampleDoublets.html" class="external-link">crossSampleDoublets</a></span><span class="op">(</span><span class="va">multiplexed_scrnaseq_sce</span><span class="op">)</span></span>
@@ -514,7 +514,7 @@ library size plot we visualised earlier.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"SNP profiles split by Seurat HTODemux call"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-17-1.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-17-1.png" width="720"></p>
 <p>We will use our knn method to reassign cells based on their SNP
 profiles. The training data is the high confidence cells</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -547,7 +547,7 @@ profiles. The training data is the high confidence cells</p>
 <span>    column_title <span class="op">=</span> <span class="st">"SNP profiles split by updated knn classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-19-1.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-19-1.png" width="720"></p>
 <p>Focusing in on the knn Hashtag5 group, we see that a lot of the
 Negative cells have now been correctly reclassed to this group, as well
 as a small number of cells from other groups.</p>
@@ -568,7 +568,7 @@ as a small number of cells from other groups.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"knn Hashtag5 group split by Seurat HTODemux classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-20-1.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-20-1.png" width="720"></p>
 <div class="section level3">
 <h3 id="performance">Performance<a class="anchor" aria-label="anchor" href="#performance"></a>
 </h3>
@@ -684,7 +684,7 @@ see that this most likely is a true Hashtag6.</p>
 <span>    column_title <span class="op">=</span> <span class="st">"knn Hashtag6 group split by demuxmix classification"</span>,</span>
 <span>    padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">15</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="demuxSNP_files/figure-html/unnamed-chunk-25-1.png" width="720"></p>
+<p><img src="c-demuxSNP-package-demo_files/figure-html/unnamed-chunk-25-1.png" width="720"></p>
 </div>
 </div>
 <div class="section level2">
