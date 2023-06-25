@@ -1,18 +1,22 @@
 # Demultiplexing scRNAseq workshop/demuxSNP package demo
 
-This page serves as a WIP site for bioc23 demuliplexing/demuxSNP workshop.
+## Intro
 
-The plan is to generate 3/4/ vignettes.
+Single-cell RNA sequencing allows for understanding of cell sub populations, interactions and heterogeneity not previously possible using bulk methods. Despite decreasing considerably, the cost of sequencing still remains a barrier for large scale single-cell studies. Multiplexing, where cells from different biological samples are pooled then sequenced on the same lane goes some way towards reducing sequencing costs. Cells must then be demultiplexed, or assigned back to their biological sample of origin.
 
-1. Intro to demultiplexing. 
-Go through some toy example as a 'this is what the data looks like' an introduce how some issues with poor data quality may present themselves.
+Two broad approaches exist to demultiplex, using either experimental cell tagging (hashing) or exploiting natural genetic variation (SNPs). Many methods have been developed in both categories, however, a universally robust algorithm has yet to be developed.
 
-2. Cell hashing.
-Introduce algorithms and do some simulated benchmarking
+## Workshop contents
 
-3. SNPs (maybe) this will be a little trickier as algorithms as much more computaitonally expensive and generally not run native in R. We'll see.
+The workshop material is broken into three main sections:
 
-4. demuxSNP package demo, adapted from demuxSNP vignette
+1.  Intro to demultiplexing: 
+Here we will introduce the main categories for demultiplexing cells, as well as different techniques for visualising the data.
 
+2.  Cell hashing: 
+Next, we will benchmark some existing hashing based methods on simulated data to identify trends in different algorithm's performance.
 
-Website should be available here: https://michaelplynch.github.io/demultiplexing-bioc23/index.html 
+3.  demuxSNP package demo:
+Finally, we will demonstrate the capabilities of our package "demuxSNP" and where it might be useful in practice.
+
+The workshop material is available on: <https://michaelplynch.github.io/demultiplexing-bioc23/index.html>

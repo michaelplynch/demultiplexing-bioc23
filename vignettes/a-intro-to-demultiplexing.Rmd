@@ -66,9 +66,12 @@ Successful demultiplexing is critical, with misassigned or unassigned cells resu
 ### Cell Hashing
 
 Cells from each group are labelled with a distinct tag (HTO or LMO) which is
-sequenced to give a counts matrix. Due to non-specific binding, these counts
-form a bimodal distribution. Such methods are generally computationally
-efficient. Their classification performance, however, is highly dependent on the
+sequenced to give a counts matrix. 
+Due to non-specific binding, these counts
+form a bimodal distribution. 
+Such methods are generally computationally
+efficient. 
+Their classification performance, however, is highly dependent on the
 tagging quality and many methods do not account for uncertainty in
 classification (@boggy_bff_2022, @kim_citefuse_2020 & @stoeckius_cell_2018).
 
@@ -91,12 +94,6 @@ sce_citeseq <- preprocessing(CITEseq_example)
 sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
 hto<-counts(sce)
 
-#tags<-matrix(rpois(4*10,lambda=5),4,10,dimnames = list(paste(rep("Hashtag",4),1:4,sep=""),paste(rep("Cell"),1:10,sep="")))
-#tags
-#data("multiplexed_scrnaseq_sce")
-#hto_mat<-counts(altExp(multiplexed_scrnaseq_sce,"HTO"))
-#hto_mat[1:6,1:10]
-
 hto[1:4,1:4]
 
 ````
@@ -112,15 +109,10 @@ Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE,show_column_names = FALSE)
 
 
 #### Per cell:
+
 Hashtag counts across cells
 
 ````{r out.width='100%',fig.width=8,fig.height=4}
-
-# mat<-tags[,1]
-# names(mat)<-paste(rep("Hashtag"),1:4,sep="")
-# barplot(mat)
-
-barplot(hto[,9])
 
 df<-data.frame(hto)
 df$group<-rownames(df)
@@ -131,6 +123,7 @@ ggplot(data=df, aes(x=group, y=AAGCCGCGTTGTCTTT)) +
 
 
 #### Per hashtag
+
 Hashtag counts across a Hashtag (bimodal distriution)
 
 ````{r out.width = '100%',fig.width=8,fig.height=4}
@@ -159,7 +152,7 @@ knitr::include_graphics("./images/snps.png")
 
 Below we describe  a simplified example of what SNP data may look like.
 
-````{r}
+````{r out.width='100%',fig.width=8,fig.height=4}
 set.seed(1)
 n=c(50,50,50,50)
 nsnps=20
@@ -168,19 +161,23 @@ snps_mat<-c()
 for (i in seq_along(n)) {
   snp<-rbinom(nsnps,1,0.3)
   h<-matrix(rep(snp,n[i]),nsnps,n[i])
+  colnames(h)<-rep(paste("Group",i),n[i])
   snps_mat<-cbind(snps_mat,h)
 }
 snps_mat[snps_mat==0]<-c(-1)
 tot_mixed<-snps_mat[,sample(1:sum(n))]
 
-Heatmap(snps_mat,cluster_columns=FALSE,cluster_rows=FALSE,col=colors)
-Heatmap(tot_mixed,cluster_columns = FALSE,cluster_rows=FALSE,col=colors)
-Heatmap(tot_mixed,cluster_columns = TRUE,cluster_rows=FALSE,row_gap = unit(1, "mm"),
-    column_gap = unit(1, "mm"),column_split=4, col=colors)
+h1<-Heatmap(snps_mat,cluster_columns=FALSE,cluster_rows=FALSE,col=colors,column_split=colnames(snps_mat),show_column_names = FALSE,name="SNP status")
+draw(h1,column_title="Groupwise SNP profiles")
+h2<-Heatmap(tot_mixed,cluster_columns = FALSE,cluster_rows=FALSE,col=colors,name="SNP status")
+draw(h2,column_title="Mixed SNP profiles")
+h3<-Heatmap(tot_mixed,cluster_columns = TRUE,cluster_rows=FALSE,row_gap = unit(1, "mm"), column_gap = unit(1, "mm"),column_split=4, col=colors,name="SNP status")
+draw(h3,column_title="Clustered SNP profiles")
 
 ````
 
-Sequencing depth, ambient RNA, mutations
+Using this small example, we can reason how cells pooled from genetically distinct biological samples might be grouped.
+In practice this task is made more complicated due to technical issues such as sequencing depth, ambient RNA, differing gene expression between cells, low quality cells, low sequencing coverage, doublets and low quality cells.
 
 ## Sessioninfo
 

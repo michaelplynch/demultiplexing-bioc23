@@ -42,12 +42,15 @@ source('../R/which_signal.R')
 source('../R/draw_counts.R')
 
 ````
+
 # Benchmarking cell hashing based methods
 
-Testing algorithms on real data is a key step to evaluating their true performance.
+Testing algorithms on real data is a key step to evaluating true performance.
 Real data includes nuances and factors which may not have been foreseen when developing the algorithm.
-However, in scRNAseq, the cost associated with running benchmark limits the amount of suitable benchmarking data.
-To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions, mostly around reducing hashing quality.
+The cost of scRNASeq means that few demultiplexing benchmarking datasets are available and often results from other demultiplexing algorithms are used as ground truth.
+As demultiplexing performance is closely tied to data quality and hetergenity, the few benchmarking datasets may not give a representative account of algorithm performance across the range of data quality observed in practice.
+
+To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions associated with poor hashing quality.
 
 short example:
 
