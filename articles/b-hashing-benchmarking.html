@@ -86,7 +86,7 @@ algorithms</h1>
                         <h4 data-toc-skip class="author">Michael
 Lynch</h4>
             
-            <h4 data-toc-skip class="date">2023-06-21</h4>
+            <h4 data-toc-skip class="date">2023-06-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/michaelplynch/demultiplexing-bioc23/blob/HEAD/vignettes/b-hashing-benchmarking.Rmd" class="external-link"><code>vignettes/b-hashing-benchmarking.Rmd</code></a></small>
       <div class="hidden name"><code>b-hashing-benchmarking.Rmd</code></div>
@@ -112,13 +112,18 @@ Lynch</h4>
 <div class="section level2">
 <h2 id="benchmarking-cell-hashing-based-methods">Benchmarking cell hashing based methods<a class="anchor" aria-label="anchor" href="#benchmarking-cell-hashing-based-methods"></a>
 </h2>
-<p>Testing algorithms on real data is a key step to evaluating their
-true performance. Real data includes nuances and factors which may not
-have been foreseen when developing the algorithm. However, in scRNAseq,
-the cost associated with running benchmark limits the amount of suitable
-benchmarking data. To overcome this, with the added benefit of
-hindsight, we simulate data to examine algorithm performance under
-specific conditions, mostly around reducing hashing quality.</p>
+<p>Testing algorithms on real data is a key step to evaluating true
+performance. Real data includes nuances and factors which may not have
+been foreseen when developing the algorithm. The cost of scRNASeq means
+that few demultiplexing benchmarking datasets are available and often
+results from other demultiplexing algorithms are used as ground truth.
+As demultiplexing performance is closely tied to data quality and
+hetergenity, the few benchmarking datasets may not give a representative
+account of algorithm performance across the range of data quality
+observed in practice.</p>
+<p>To overcome this, with the added benefit of hindsight, we simulate
+data to examine algorithm performance under specific conditions
+associated with poor hashing quality.</p>
 <p>short example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -272,24 +277,24 @@ specific conditions, mostly around reducing hashing quality.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] gridExtra_2.3               SeuratObject_4.1.3         </span></span>
-<span><span class="co">#&gt;  [3] Seurat_4.3.0                demuxmix_1.2.0             </span></span>
+<span><span class="co">#&gt;  [3] Seurat_4.3.0.1              demuxmix_1.2.0             </span></span>
 <span><span class="co">#&gt;  [5] dplyr_1.1.2                 CiteFuse_1.12.0            </span></span>
 <span><span class="co">#&gt;  [7] EnsDb.Hsapiens.v86_2.99.0   dittoSeq_1.12.0            </span></span>
 <span><span class="co">#&gt;  [9] ggpubr_0.6.0                ggplot2_3.4.2              </span></span>
 <span><span class="co">#&gt; [11] viridisLite_0.4.2           ComplexHeatmap_2.16.0      </span></span>
 <span><span class="co">#&gt; [13] demuxSNP_0.99.10            ensembldb_2.24.0           </span></span>
-<span><span class="co">#&gt; [15] AnnotationFilter_1.24.0     GenomicFeatures_1.52.0     </span></span>
+<span><span class="co">#&gt; [15] AnnotationFilter_1.24.0     GenomicFeatures_1.52.1     </span></span>
 <span><span class="co">#&gt; [17] AnnotationDbi_1.62.1        VariantAnnotation_1.46.0   </span></span>
 <span><span class="co">#&gt; [19] Rsamtools_2.16.0            Biostrings_2.68.1          </span></span>
 <span><span class="co">#&gt; [21] XVector_0.40.0              SingleCellExperiment_1.22.0</span></span>
 <span><span class="co">#&gt; [23] SummarizedExperiment_1.30.2 Biobase_2.60.0             </span></span>
-<span><span class="co">#&gt; [25] GenomicRanges_1.52.0        GenomeInfoDb_1.36.0        </span></span>
-<span><span class="co">#&gt; [27] IRanges_2.34.0              S4Vectors_0.38.1           </span></span>
+<span><span class="co">#&gt; [25] GenomicRanges_1.52.0        GenomeInfoDb_1.36.1        </span></span>
+<span><span class="co">#&gt; [27] IRanges_2.34.1              S4Vectors_0.38.1           </span></span>
 <span><span class="co">#&gt; [29] BiocGenerics_0.46.0         MatrixGenerics_1.12.2      </span></span>
 <span><span class="co">#&gt; [31] matrixStats_1.0.0          </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] segmented_1.6-4           spatstat.sparse_3.0-1    </span></span>
+<span><span class="co">#&gt;   [1] segmented_1.6-4           spatstat.sparse_3.0-2    </span></span>
 <span><span class="co">#&gt;   [3] fs_1.6.2                  ProtGenerics_1.32.0      </span></span>
 <span><span class="co">#&gt;   [5] bitops_1.0-7              httr_1.4.6               </span></span>
 <span><span class="co">#&gt;   [7] RColorBrewer_1.1-3        doParallel_1.0.17        </span></span>
@@ -298,7 +303,7 @@ specific conditions, mostly around reducing hashing quality.</p>
 <span><span class="co">#&gt;  [13] utf8_1.2.3                R6_2.5.1                 </span></span>
 <span><span class="co">#&gt;  [15] lazyeval_0.2.2            uwot_0.1.14              </span></span>
 <span><span class="co">#&gt;  [17] rhdf5filters_1.12.1       GetoptLong_1.0.5         </span></span>
-<span><span class="co">#&gt;  [19] sp_1.6-1                  withr_2.5.0              </span></span>
+<span><span class="co">#&gt;  [19] sp_2.0-0                  withr_2.5.0              </span></span>
 <span><span class="co">#&gt;  [21] prettyunits_1.1.1         bayesm_3.1-5             </span></span>
 <span><span class="co">#&gt;  [23] progressr_0.13.0          cli_3.6.1                </span></span>
 <span><span class="co">#&gt;  [25] textshaping_0.3.6         spatstat.explore_3.2-1   </span></span>
@@ -352,7 +357,7 @@ specific conditions, mostly around reducing hashing quality.</p>
 <span><span class="co">#&gt; [121] stringr_1.5.0             digest_0.6.31            </span></span>
 <span><span class="co">#&gt; [123] spatstat.utils_3.0-3      mixtools_2.0.0           </span></span>
 <span><span class="co">#&gt; [125] rmarkdown_2.22            htmltools_0.5.5          </span></span>
-<span><span class="co">#&gt; [127] pkgconfig_2.0.3           sparseMatrixStats_1.12.0 </span></span>
+<span><span class="co">#&gt; [127] pkgconfig_2.0.3           sparseMatrixStats_1.12.1 </span></span>
 <span><span class="co">#&gt; [129] highr_0.10                dbplyr_2.3.2             </span></span>
 <span><span class="co">#&gt; [131] fastmap_1.1.1             rlang_1.1.1              </span></span>
 <span><span class="co">#&gt; [133] GlobalOptions_0.1.2       htmlwidgets_1.6.2        </span></span>

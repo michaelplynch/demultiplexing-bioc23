@@ -84,15 +84,23 @@
 <div class="section level1">
 <div class="page-header"><h1 id="demultiplexing-scrnaseq-workshopdemuxsnp-package-demo">Demultiplexing scRNAseq workshop/demuxSNP package demo<a class="anchor" aria-label="anchor" href="#demultiplexing-scrnaseq-workshopdemuxsnp-package-demo"></a>
 </h1></div>
-<p>This page serves as a WIP site for bioc23 demuliplexing/demuxSNP workshop.</p>
-<p>The plan is to generate 3/4/ vignettes.</p>
+<div class="section level2">
+<h2 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
+</h2>
+<p>Single-cell RNA sequencing allows for understanding of cell sub populations, interactions and heterogeneity not previously possible using bulk methods. Despite decreasing considerably, the cost of sequencing still remains a barrier for large scale single-cell studies. Multiplexing, where cells from different biological samples are pooled then sequenced on the same lane goes some way towards reducing sequencing costs. Cells must then be demultiplexed, or assigned back to their biological sample of origin.</p>
+<p>Two broad approaches exist to demultiplex, using either experimental cell tagging (hashing) or exploiting natural genetic variation (SNPs). Many methods have been developed in both categories, however, a universally robust algorithm has yet to be developed.</p>
+</div>
+<div class="section level2">
+<h2 id="workshop-contents">Workshop contents<a class="anchor" aria-label="anchor" href="#workshop-contents"></a>
+</h2>
+<p>The workshop material is broken into three main sections:</p>
 <ol style="list-style-type: decimal">
-<li><p>Intro to demultiplexing. Go through some toy example as a ‘this is what the data looks like’ an introduce how some issues with poor data quality may present themselves.</p></li>
-<li><p>Cell hashing. Introduce algorithms and do some simulated benchmarking</p></li>
-<li><p>SNPs (maybe) this will be a little trickier as algorithms as much more computaitonally expensive and generally not run native in R. We’ll see.</p></li>
-<li><p>demuxSNP package demo, adapted from demuxSNP vignette</p></li>
+<li><p>Intro to demultiplexing: Here we will introduce the main categories for demultiplexing cells, as well as different techniques for visualising the data.</p></li>
+<li><p>Cell hashing: Next, we will benchmark some existing hashing based methods on simulated data to identify trends in different algorithm’s performance.</p></li>
+<li><p>demuxSNP package demo: Finally, we will demonstrate the capabilities of our package “demuxSNP” and where it might be useful in practice.</p></li>
 </ol>
-<p>Website should be available here: <a href="https://michaelplynch.github.io/demultiplexing-bioc23/index.html" class="uri">https://michaelplynch.github.io/demultiplexing-bioc23/index.html</a></p>
+<p>The workshop material is available on: <a href="https://michaelplynch.github.io/demultiplexing-bioc23/index.html" class="uri">https://michaelplynch.github.io/demultiplexing-bioc23/index.html</a></p>
+</div>
 </div>
   </div>
 
