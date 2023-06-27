@@ -32,7 +32,8 @@ Suggests:
     rmarkdown,
     pkgdown,
     BiocStyle,
-    cellhashR
+    cellhashR,
+    gridExtra
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR

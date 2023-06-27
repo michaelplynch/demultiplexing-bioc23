@@ -36,6 +36,7 @@ library(ggpubr)
 library(dittoSeq)
 library(utils)
 library(EnsDb.Hsapiens.v86)
+library(kableExtra)
 ```
 
 ```{r}
@@ -44,19 +45,18 @@ colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 
 # Introduction
 
-Reminder, demultiplexing allows reduction of sequencing costs by sequencing cells from mulitple biological sampels on the same lane, as well as allowing identifying of the increased proportion of doublets associated with greater cells loaded.
-Poor demultiplexing performance results in waste in valuable data, reduction in LFC used in DE or otherwise potentailly confusing results.
-
+To refresh, demultiplexing allows reduction of sequencing costs by sequencing cells from multiple biological sampels on the same lane, as well as allowing identifying of the increased proportion of doublets associated with greater cells loaded.
+Poor demultiplexing performance results in waste in valuable data, reduction in LFC used in DE or otherwise potentially confusing results.
 
 ## Existing Methods
 
-Weaknesses (find a better word for this) of existing methods: 
+Limitations of existing methods: 
 
 Hashing algorithms can correctly call some but not all cells correctly and is highly dependent on the hashing quality
 
 SNPs algorithms either:
-require genotype information (demuxlet) which incurs additional cost
-struggle to identify rarer samples (due to lack of genotype information)
+Genotype based methods incur additoinal cost (Demuxlet)
+Genotype-free methods struggle to identify rarer samples (due to lack of genotype information)
 
 ## demuxSNP Motivation
 
@@ -168,6 +168,7 @@ sce <- reassign(sce,
     predict_cells = sce$predict
 )
 ```
+
 Reassigns cells based on SNP profiles of high confidence cells. Singlet training
 data is based on high confidence singlet assignment. Doublets are simulated
 by systematically sampling and combining the SNP profiles of n cells pairs from
@@ -176,6 +177,14 @@ each grouping combination. Cells to be used for training data are specified by
 "predict_cells" (logical), this may also include the training data.
 
 # Exploratory Analysis
+
+The sample dataset is a subset of ccRCC scRNAseq with six patients.
+
+````{r fig.cap="Multiplexed scRNASeq sample dataset"}
+
+knitr::include_graphics("./images/ccrcc-samples.png")
+
+````
 
 We load three data objects: a SingleCellExperiment object containing RNA and HTO
 counts, a .vcf file of class CollapsedVCF containing SNPs from 1000 Genomes
@@ -226,24 +235,25 @@ seurat$MULTI_ID <- factor(as.character(seurat$MULTI_ID))
 multiplexed_scrnaseq_sce$seurat <- seurat$hash.ID
 multiplexed_scrnaseq_sce$multiseq<- seurat$MULTI_ID
 
-
-table(multiplexed_scrnaseq_sce$seurat)
+t<-table(multiplexed_scrnaseq_sce$seurat)
+u<-as.matrix(t)
+kable(t) %>% kable_styling(bootstrap_options = "bordered")
 ```
 
 Although HTO library size of the Negative group is low, the RNA library size is
 similar to that of other groups, indicating that they may be misclassified as
-Negative due to their tagging quality rather than overall RNA quality.
+'Negative' due to their tagging quality rather than overall RNA quality.
 
-```{r}
-dittoPlot(seurat, "nCount_HTO", group.by = "hash.ID")
-dittoPlot(seurat, "nCount_RNA", group.by = "hash.ID")
+```{r out.width = '100%',fig.width=8,fig.height=4}
+dittoPlot(seurat, log(seurat$nCount_HTO), group.by = "hash.ID")
+dittoPlot(seurat, log(seurat$nCount_RNA), group.by = "hash.ID")
 ```
 
 ````{r}
 library(CiteFuse)
 multiplexed_scrnaseq_sce<-crossSampleDoublets(multiplexed_scrnaseq_sce)
 
-table(seurat$hash.ID,multiplexed_scrnaseq_sce$doubletClassify_between_label)
+kable(as.matrix(table(seurat$hash.ID,multiplexed_scrnaseq_sce$doubletClassify_between_label))) %>% kable_styling(bootstrap_options = "bordered")
 
 table(multiplexed_scrnaseq_sce$seurat,multiplexed_scrnaseq_sce$multiseq)
 

@@ -1,4 +1,4 @@
-#' Title Draw counts from signal or noise based on logical matrix 'mat'
+#' Draw counts from signal or noise based on logical matrix 'mat'
 #'
 #' @param size_sig size parameter signal
 #' @param size_bg size parameter background
