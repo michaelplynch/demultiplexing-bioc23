@@ -34,7 +34,7 @@ Suggests:
     BiocStyle,
     cellhahsR
 Remotes:
-    michaelplynch/demuxSNP
+    michaelplynch/demuxSNP,
     bimberlab/cellhashR
 URL: https://michaelplynch.github.io/demultiplexing-bioc23/
 BugReports: https://github.com/michaelplynch/demultiplexing-bioc23
