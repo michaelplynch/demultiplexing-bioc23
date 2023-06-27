@@ -51,23 +51,31 @@ As demultiplexing performance is closely tied to data quality and hetergenity, t
 
 To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions associated with poor hashing quality.
 
-short example:
+## Data generation
 
 ````{r}
 
-mat<-logimat(ngroups=2,nsinglet=c(20,20),ndoub=10,nneg=4)
+mat<-logimat(ngroups=2,nsinglet=c(200,200),ndoub=50,nneg=50)
 library(ComplexHeatmap)
+mat[1:2,1:10]
 Heatmap(mat)
 
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(20,2),mu_bg = rep(5,2),mat=mat,seed=1)
-Heatmap(counts)
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(50,2),mu_bg = rep(5,2),mat=mat,seed=1)
+counts[1:2,c(1,201,401,451)]
+Heatmap(log(counts++1))
+
+myplots<-plot_hashtag(as.data.frame(t(counts)))
+do.call(grid.arrange,myplots)
+````
+
+````{r}
+
+
+
 ````
 
 
-library(gridExtra)
-do.call(grid.arrange,myplots)
-
-
+## Overall demultiplexing performance reduces with signal/noise ratio
 
 ````{r}
 mu1<-seq(80,20,-5)
@@ -85,10 +93,12 @@ seurat<-HTODemux(seurat)
 acc[i]<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
 
 }
-plot(acc)
+plot(mu1,acc)
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
+
+## FPR increases with small group size
 
 ````{r}
 ncells<-seq(2000,100,-100)
@@ -106,11 +116,12 @@ seurat<-HTODemux(seurat)
 acc[i]<-(sum(seurat$hashtag[seurat$hash.ID=="Hashtag4"]==seurat$hash.ID[seurat$hash.ID=="Hashtag4"]))/length(seurat$hashtag[seurat$hash.ID=="Hashtag4"])
 
 }
-plot(acc)
+plot(ncells,acc)
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
 
+## Reduction in signal/noise ratio in one group
 
 ````{r}
 mu4<-seq(80,20,-10)
@@ -128,10 +139,12 @@ seurat<-HTODemux(seurat)
 acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
 
 }
-plot(acc)
+plot(mu4,acc)
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
+
+## Reduction in signal/noise ratio and increased group size
 
 ````{r}
 mu4<-seq(80,20,-10)
@@ -149,7 +162,7 @@ seurat<-HTODemux(seurat)
 acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
 
 }
-plot(acc)
+plot(mu4,acc)
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
