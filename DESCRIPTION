@@ -32,7 +32,7 @@ Suggests:
     rmarkdown,
     pkgdown,
     BiocStyle,
-    cellhahsR
+    cellhashR
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR
