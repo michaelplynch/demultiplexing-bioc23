@@ -23,24 +23,23 @@ knitr::opts_chunk$set(
 ```
 
 ```{r message=FALSE}
-library(demuxSNP)
 library(ComplexHeatmap)
 library(viridisLite)
 library(ggpubr)
 library(dittoSeq)
 library(utils)
-library(EnsDb.Hsapiens.v86)
+library(SingleCellExperiment)
+library(gridExtra)
+library(Seurat)
 ```
 
-```{r}
-colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
-```
+
 
 ````{r}
 
 source('../R/which_signal.R')
 source('../R/draw_counts.R')
-
+source('../R/plot_hashtag.R')
 ````
 
 # Benchmarking cell hashing based methods
@@ -65,97 +64,96 @@ Heatmap(counts)
 ````
 
 
-````{r}
-
-mat<-logimat(ngroups=4,nsinglet=c(5000,5000,5000,5000),ndoub=2500,nneg=2500)
-library(ComplexHeatmap)
-#Heatmap(mat)
-
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(20,4),mu_bg = rep(5,4),mat=mat,seed=1)
-#Heatmap(counts)
-counts4<-counts
-dim(counts4)
-
-mat<-logimat(ngroups=8,nsinglet=rep(2500,8),ndoub=2500,nneg=2500)
-library(ComplexHeatmap)
-#Heatmap(mat)
-
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(20,8),mu_bg = rep(5,8),mat=mat,seed=1)
-#Heatmap(counts)
-counts8<-counts
-dim(counts8)
-
-library(SingleCellExperiment)
-h4<-SingleCellExperiment(list(counts=counts4))
-h8<-SingleCellExperiment(list(counts=counts8))
-
-sce4<-SingleCellExperiment(list(counts=matrix(nrow=3,ncol=ncol(h4))))
-sce8<-SingleCellExperiment(list(counts=matrix(nrow=3,ncol=ncol(h8))))
-
-
-
-altExp(sce4,"HTO")<-h4
-sce4$hashtag<-colnames(h4)
-
-altExp(sce8,"HTO")<-h8
-sce8$hashtag<-colnames(h8)
-
-library(CiteFuse)
-sce4 <- normaliseExprs(sce = sce4,
-                     altExp="HTO",
-                     transform = "log")
-sce4<-crossSampleDoublets(sce4)
-
-library(dplyr)
-sce4$citefuse<-recode(sce4$doubletClassify_between_label,negative="Negative",'1'="Hashtag1",'2'="Hashtag2",'3'="Hashtag3",'4'="Hashtag4",'doublet/multiplet'="Doublet")
-table(sce4$citefuse)
-sum(sce4$hashtag==sce4$citefuse)/length(sce4$hashtag)
-
-library(CiteFuse)
-sce8 <- normaliseExprs(sce = sce8,
-                     altExp="HTO",
-                     transform = "log")
-sce8<-crossSampleDoublets(sce8)
-
-library(dplyr)
-sce8$citefuse<-recode(sce8$doubletClassify_between_label,negative="Negative",'1'="Hashtag1",'2'="Hashtag2",'3'="Hashtag3",'4'="Hashtag4",'5'="Hashtag5",'6'="Hashtag6",'7'="Hashtag7",'8'="Hashtag8",'doublet/multiplet'="Doublet")
-table(sce8$citefuse)
-sum(sce8$hashtag==sce8$citefuse)/length(sce8$hashtag)
-
-````
-
-````{r}
-
-library(demuxmix)
-#dmm<-demuxmix(as.matrix(counts(h4)),model = "naive")
-dmm<-demuxmix(as.matrix(counts(h4)),model = "naive")
-dmmlabels<-dmmClassify(dmm)
-dmmlabels$HTO[dmmlabels$Type=="negative"]<-"Negative"
-dmmlabels$HTO[dmmlabels$Type=="multiplet"]<-"Doublet"
-dmmlabels$HTO<-recode(dmmlabels$HTO,HTO1="Hashtag1",HTO2="Hashtag2",HTO3="Hashtag3",HTO4="Hashtag4",HTO5="Hashtag5",HTO6="Hashtag6",HTO7="Hashtag7",HTO8="Hasthag8")
-sce4$dmm<-dmmlabels$HTO
-
-sum(sce4$hashtag==sce4$dmm)/ncol(sce4)
-
-````
-
-````{r}
-
-library(ggplot2); library(ggpubr);library(Seurat)
-df<-as.data.frame(t(counts(altExp(sce4))))
-#df<-log(df)
-df <- as.data.frame(NormalizeData(df, normalization.method = "CLR"))
-myplots <- list()
-for (i in seq_along(colnames(df))) {
-  tag<-colnames(df)[i]
-plotx<-gghistogram(df,x=tag,fill ="black",palette = "lancet",alpha=1,bins=50)
-myplots[[i]]<-plotx
-}
-
 library(gridExtra)
 do.call(grid.arrange,myplots)
 
+
+
+````{r}
+mu1<-seq(80,20,-5)
+acc<-c()
+for (i in seq_along(mu1)) {
+
+mat<-logimat(ngroups=4,nsinglet=rep(2000,4),ndoub=2000,nneg=200)
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(mu1[i],4),mu_bg = rep(5,4),mat=mat,seed=1)
+hto<-SingleCellExperiment(list(counts=counts))
+
+seurat<-CreateSeuratObject(counts=counts,assay="HTO")
+seurat<-NormalizeData(seurat,normalization.method ="CLR")
+seurat$hashtag<-colnames(counts)
+seurat<-HTODemux(seurat)
+acc[i]<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
+
+}
+plot(acc)
+myplots<-plot_hashtag(as.data.frame(t(counts)))
+do.call(grid.arrange,myplots)
 ````
+
+````{r}
+ncells<-seq(2000,100,-100)
+acc<-c()
+for (i in seq_along(ncells)) {
+
+mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,ncells[i]),ndoub=2000,nneg=200)
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(30,4),mu_bg = rep(5,4),mat=mat,seed=1)
+hto<-SingleCellExperiment(list(counts=counts))
+
+seurat<-CreateSeuratObject(counts=counts,assay="HTO")
+seurat<-NormalizeData(seurat,normalization.method ="CLR")
+seurat$hashtag<-colnames(counts)
+seurat<-HTODemux(seurat)
+acc[i]<-(sum(seurat$hashtag[seurat$hash.ID=="Hashtag4"]==seurat$hash.ID[seurat$hash.ID=="Hashtag4"]))/length(seurat$hashtag[seurat$hash.ID=="Hashtag4"])
+
+}
+plot(acc)
+myplots<-plot_hashtag(as.data.frame(t(counts)))
+do.call(grid.arrange,myplots)
+````
+
+
+````{r}
+mu4<-seq(80,20,-10)
+acc<-c()
+for (i in seq_along(mu4)) {
+
+mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,2000),ndoub=2000,nneg=200)
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = c(40,40,40,mu4[i]),mu_bg = rep(5,4),mat=mat,seed=1)
+hto<-SingleCellExperiment(list(counts=counts))
+
+seurat<-CreateSeuratObject(counts=counts,assay="HTO")
+seurat<-NormalizeData(seurat,normalization.method ="CLR")
+seurat$hashtag<-colnames(counts)
+seurat<-HTODemux(seurat)
+acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
+
+}
+plot(acc)
+myplots<-plot_hashtag(as.data.frame(t(counts)))
+do.call(grid.arrange,myplots)
+````
+
+````{r}
+mu4<-seq(80,20,-10)
+acc<-c()
+for (i in seq_along(mu4)) {
+
+mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,4000),ndoub=2000,nneg=200)
+counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = c(40,40,40,mu4[i]),mu_bg = rep(5,4),mat=mat,seed=1)
+hto<-SingleCellExperiment(list(counts=counts))
+
+seurat<-CreateSeuratObject(counts=counts,assay="HTO")
+seurat<-NormalizeData(seurat,normalization.method ="CLR")
+seurat$hashtag<-colnames(counts)
+seurat<-HTODemux(seurat)
+acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
+
+}
+plot(acc)
+myplots<-plot_hashtag(as.data.frame(t(counts)))
+do.call(grid.arrange,myplots)
+````
+
 # Session Info
 
 ```{r}

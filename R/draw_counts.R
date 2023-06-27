@@ -23,6 +23,6 @@ merged[mat==TRUE]<-counts_sig[mat==TRUE]
 merged[mat==FALSE]<-counts_bg[mat==FALSE]
 
 colnames(merged)<-colnames(mat)
-rownames(merged)<-paste(rep("HTO",dim(mat)[1]),seq_len(dim(mat)[1]),sep="")
+rownames(merged)<-paste(rep("Hashtag",dim(mat)[1]),seq_len(dim(mat)[1]),sep="")
 return(merged)
 }

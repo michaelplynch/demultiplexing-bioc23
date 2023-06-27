@@ -29,7 +29,7 @@ logimat<-function(ngroups,nsinglet,ndoub,nneg) {
   }
   
   #negative
-  neg<-matrix(0,nrow=ngroups,ncol=nneg,dimnames=list(paste(rep("HTO",ngroups),seq_len(ngroups)),rep("Negative",nneg)))
+  neg<-matrix(0,nrow=ngroups,ncol=nneg,dimnames=list(paste(rep("Hashtag",ngroups),seq_len(ngroups)),rep("Negative",nneg)))
   all<-cbind(singlet,doub,neg)
   
   return(all)
