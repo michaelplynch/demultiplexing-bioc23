@@ -237,7 +237,7 @@ multiplexed_scrnaseq_sce$multiseq<- seurat$MULTI_ID
 
 t<-table(multiplexed_scrnaseq_sce$seurat)
 u<-as.matrix(t)
-kable(t) %>% kable_styling(bootstrap_options = "bordered")
+kable(u) %>% kable_styling(bootstrap_options = "bordered")
 ```
 
 Although HTO library size of the Negative group is low, the RNA library size is
