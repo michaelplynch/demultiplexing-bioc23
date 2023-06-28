@@ -31,6 +31,7 @@ library(utils)
 library(SingleCellExperiment)
 library(gridExtra)
 library(Seurat)
+library(cellhashR)
 ```
 
 
@@ -71,7 +72,7 @@ do.call(grid.arrange,myplots)
 ## cellhashR test
 
 ````{r}
-reticulate::py_config()
+#reticulate::py_config()
 calls<-GenerateCellHashingCalls(barcodeMatrix=counts,methods="bff_cluster")
 table(calls$bff_cluster)
 ````
