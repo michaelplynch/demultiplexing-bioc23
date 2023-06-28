@@ -33,7 +33,8 @@ Suggests:
     pkgdown,
     BiocStyle,
     cellhashR,
-    gridExtra
+    gridExtra,
+    kableExtra
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR
