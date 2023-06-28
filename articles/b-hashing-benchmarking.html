@@ -148,7 +148,7 @@ associated with poor hashing quality.</p>
 <span><span class="co">#&gt;          Hashtag1 Hashtag2 Doublet Negative</span></span>
 <span><span class="co">#&gt; Hashtag1       46        5      50        0</span></span>
 <span><span class="co">#&gt; Hashtag2        4       25      78        3</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">counts</span><span class="op">+</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">counts</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-4-2.png" width="720"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -378,11 +378,16 @@ ratio<a class="anchor" aria-label="anchor" href="#overall-demultiplexing-perform
 <code class="sourceCode R"><span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu">plot_hashtag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-8-2.png" width="720"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>true<span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span>,pred<span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">pred</span>,x<span class="op">=</span><span class="va">true</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-8-3.png" width="720"></p>
 </div>
 <div class="section level3">
 <h3 id="reduction-in-signalnoise-ratio-and-increased-group-size">Reduction in signal/noise ratio and increased group size<a class="anchor" aria-label="anchor" href="#reduction-in-signalnoise-ratio-and-increased-group-size"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mu4</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">80</span>,<span class="fl">20</span>,<span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">acc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">mu4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -420,7 +425,7 @@ ratio<a class="anchor" aria-label="anchor" href="#overall-demultiplexing-perform
 <span><span class="co">#&gt; unique</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mu4</span>,<span class="va">acc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-9-1.png" width="720"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu">plot_hashtag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-9-2.png" width="720"></p>
@@ -429,7 +434,7 @@ ratio<a class="anchor" aria-label="anchor" href="#overall-demultiplexing-perform
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
