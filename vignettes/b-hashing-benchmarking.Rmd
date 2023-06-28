@@ -68,10 +68,12 @@ myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
 
+## cellhashR test
+
 ````{r}
-
-
-
+reticulate::py_config()
+calls<-GenerateCellHashingCalls(barcodeMatrix=counts,methods="bff_cluster")
+table(calls$bff_cluster)
 ````
 
 
