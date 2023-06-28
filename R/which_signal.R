@@ -1,4 +1,4 @@
-#' Title Create logical matrix for singlets, doublets and negatives
+#' Create logical matrix for singlets, doublets and negatives
 #'
 #' @param ngroups number of biological samples
 #' @param nsinglet vector for number of singlets in each group
