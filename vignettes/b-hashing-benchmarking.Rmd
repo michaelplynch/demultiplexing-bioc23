@@ -63,7 +63,7 @@ Heatmap(mat)
 
 counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(50,2),mu_bg = rep(5,2),mat=mat,seed=1)
 counts[1:2,c(1,201,401,451)]
-Heatmap(log(counts++1))
+Heatmap(log(counts+1))
 
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
@@ -145,6 +145,9 @@ acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$h
 plot(mu4,acc)
 myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
+
+df<-data.frame(true=seurat$hashtag,pred=seurat$hash.ID)
+ggplot(df, aes(fill=pred,x=true))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
 ````
 
 ## Reduction in signal/noise ratio and increased group size

@@ -11,7 +11,7 @@ plot_hashtag<-function(df) {
 plots <- list()
 for (i in seq_along(colnames(df))) {
   tag<-colnames(df)[i]
-  plotx<-gghistogram(df,x=tag,fill ="black",palette = "lancet",alpha=1,bins=50)
+  plotx<-gghistogram(df,x=tag,fill ="black",palette = "lancet",alpha=1,binwidth = 2)
   plots[[i]]<-plotx
 }
 return(plots)

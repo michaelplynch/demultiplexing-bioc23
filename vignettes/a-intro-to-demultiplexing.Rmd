@@ -167,11 +167,11 @@ for (i in seq_along(n)) {
 snps_mat[snps_mat==0]<-c(-1)
 tot_mixed<-snps_mat[,sample(1:sum(n))]
 
-h1<-Heatmap(snps_mat,cluster_columns=FALSE,cluster_rows=FALSE,col=colors,column_split=colnames(snps_mat),show_column_names = FALSE,name="SNP status")
+h1<-Heatmap(snps_mat,cluster_columns=FALSE,cluster_rows=FALSE,col=colors,column_split=colnames(snps_mat),show_column_names = FALSE,name="SNP status", row_title = "SNPs",column_title = "Cells")
 draw(h1,column_title="Groupwise SNP profiles")
-h2<-Heatmap(tot_mixed,cluster_columns = FALSE,cluster_rows=FALSE,col=colors,name="SNP status")
+h2<-Heatmap(tot_mixed,cluster_columns = FALSE, cluster_rows=FALSE, col=colors, show_column_names=FALSE, name="SNP status", row_title = "SNPs",column_title = "Cells")
 draw(h2,column_title="Mixed SNP profiles")
-h3<-Heatmap(tot_mixed,cluster_columns = TRUE,cluster_rows=FALSE,row_gap = unit(1, "mm"), column_gap = unit(1, "mm"),column_split=4, col=colors,name="SNP status")
+h3<-Heatmap(tot_mixed,cluster_columns = TRUE,cluster_rows=FALSE,row_gap = unit(1, "mm"), column_gap = unit(1, "mm"),column_split=4, show_column_names=FALSE, col=colors, name="SNP status", row_title = "SNPs",column_title = "Cells")
 draw(h3,column_title="Clustered SNP profiles")
 
 ````
