@@ -16,15 +16,23 @@ demuxSNP trains a knn classifier on the SNP profiles of cells assigned with high
 * link to workshop on Galazy
 * docker
 
+## Prerequisites
+
+* Familiarity with R/Bioconductor
+* Familiarity with scRNAseq data analysis
+* Previous demultiplexing experience is helpful but not necessary
+
+
 ## Syllabus
 
 1.  Intro to demultiplexing: 
-Here we will introduce the main categories for demultiplexing cells, as well as different techniques for visualising the data.
+Learn what the different data types used to demultiplex look like, understand some of the different ways low quality data can appear and the implications this has on designing demultiplexing algorithms.
 
 2.  Cell hashing: 
-Next, we will benchmark some existing hashing based methods on simulated data to identify trends in different algorithm's performance.
+Understand the usefulness of simulated data in benchmarking, particularly in the absence of comprehensive real data with ground truth.
+Understand how hashing quality impacts demultiplexing performance.
 
 3.  demuxSNP package demo:
-Finally, we will demonstrate the capabilities of our package "demuxSNP" and where it might be useful in practice.
+Understand how SNP data from cells confidently assigned using cell hashing methods
 
 The workshop material is available on: <https://michaelplynch.github.io/demultiplexing-bioc23/index.html>
