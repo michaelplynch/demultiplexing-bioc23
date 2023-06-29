@@ -90,8 +90,10 @@ Example matrix:
 ````{r}
 
 data("CITEseq_example", package = "CiteFuse")
-sce_citeseq <- preprocessing(CITEseq_example)
-sce<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
+sce <- preprocessing(CITEseq_example)
+altExp(sce,"HTO")<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
+sce <- normaliseExprs(sce = sce, altExp_name = "HTO", transform = "log")
+sce<-crossSampleDoublets(sce)
 hto<-counts(sce)
 
 hto[1:4,1:4]
@@ -131,13 +133,23 @@ set.seed(1)
 bg<-rnbinom(n=500,size=5,mu=2)
 sig<-rnbinom(n=400,size=10,mu=50)
 
-df<-data.frame(c(bg,sig))
-colnames(df)<-"Hashtag1"
-gghistogram(df, x = "Hashtag1", fill = dittoColors(1)[1], palette = "lancet", xlim = c(0, 120), ylim = c(0, 750), alpha = 1,bins=30)
+df<-data.frame(t(logcounts(altExp(sce,"HTO"))))
+myplots<-plot_hashtag(df)
+do.call(grid.arrange,myplots)
 
 ````
 
 Reduction in hashing quality leads to reduction in cell hashing algorithm performance.
+
+
+````{r}
+
+sce<-runPCA(sce, altexp="HTO", exprs_values = "logcounts")
+dittoDimPlot(sce,reduction.use="PCA","doubletClassify_between_label")
+sce<-runTSNE(sce, altexp = "HTO")
+dittoDimPlot(sce,reduction.use="TSNE","doubletClassify_between_label")
+````
+
 
 ### SNPs
 

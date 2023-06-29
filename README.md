@@ -13,8 +13,9 @@ demuxSNP trains a knn classifier on the SNP profiles of cells assigned with high
 
 ## Workshop installation
 
-* link to workshop on Galazy
-* docker
+* Galaxy: https://workshop.bioconductor.org/
+* Docker:
+`sudo docker run -e PASSWORD=<choose_your_password> -p 8787:8787 ghcr.io/michaelplynch/demultiplexing-bioc23` with rstudio:<choose_your_password>
 
 ## Prerequisites
 
