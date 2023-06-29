@@ -104,7 +104,7 @@ sce <- preprocessing(CITEseq_example)
 altExp(sce,"HTO")<-as(altExp(sce,"HTO"),"SingleCellExperiment")
 sce <- normaliseExprs(sce = sce, altExp_name = "HTO", transform = "log")
 sce<-crossSampleDoublets(sce)
-hto<-counts(sce)
+hto<-counts(altExp(sce,"HTO"))
 
 hto[1:4,1:4]
 
