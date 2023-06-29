@@ -2,4 +2,6 @@
 
 export(draw_counts)
 export(logimat)
+export(plot_hashtag)
+importFrom(ggpubr,gghistogram)
 importFrom(stats,rnbinom)

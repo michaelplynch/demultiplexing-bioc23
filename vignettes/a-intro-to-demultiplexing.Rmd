@@ -26,12 +26,22 @@ library(CiteFuse)
 library(dittoSeq)
 library(ggpubr)
 library(Seurat)
+library(gridExtra)
+library(scater)
 
 ````
 
 ```{r}
 colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 ```
+
+````{r}
+
+source('../R/which_signal.R')
+source('../R/draw_counts.R')
+source('../R/plot_hashtag.R')
+
+````
 
 # Introduction to demultiplexing
 

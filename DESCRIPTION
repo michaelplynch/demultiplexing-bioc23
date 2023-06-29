@@ -15,8 +15,9 @@ LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
-    Biobase,
     R (>= 4.3.0)
+Imports:
+    ggpubr
 Suggests: 
     Seurat,
     SingleCellExperiment,
@@ -25,7 +26,6 @@ Suggests:
     demuxSNP,
     CiteFuse,
     dittoSeq,
-    ggpubr,
     EnsDb.Hsapiens.v86,
     utils,
     knitr,
@@ -34,7 +34,8 @@ Suggests:
     BiocStyle,
     cellhashR,
     gridExtra,
-    kableExtra
+    kableExtra,
+    scater
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR

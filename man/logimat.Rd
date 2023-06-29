@@ -2,7 +2,7 @@
 % Please edit documentation in R/which_signal.R
 \name{logimat}
 \alias{logimat}
-\title{Title Create logical matrix for singlets, doublets and negatives}
+\title{Create logical matrix for singlets, doublets and negatives}
 \usage{
 logimat(ngroups, nsinglet, ndoub, nneg)
 }
@@ -19,5 +19,5 @@ logimat(ngroups, nsinglet, ndoub, nneg)
 logical matrix
 }
 \description{
-Title Create logical matrix for singlets, doublets and negatives
+Create logical matrix for singlets, doublets and negatives
 }

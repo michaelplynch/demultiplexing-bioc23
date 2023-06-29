@@ -2,9 +2,9 @@
 % Please edit documentation in R/draw_counts.R
 \name{draw_counts}
 \alias{draw_counts}
-\title{Title Draw counts from signal or noise based on logical matrix 'mat'}
+\title{Draw counts from signal or noise based on logical matrix 'mat'}
 \usage{
-draw_counts(size_sig, size_bg, mu_sig, mu_bg, mat, seed)
+draw_counts(size_sig, size_bg, mu_sig, mu_bg, mat, seed = NULL)
 }
 \arguments{
 \item{size_sig}{size parameter signal}
@@ -23,5 +23,5 @@ draw_counts(size_sig, size_bg, mu_sig, mu_bg, mat, seed)
 counts matrix
 }
 \description{
-Title Draw counts from signal or noise based on logical matrix 'mat'
+Draw counts from signal or noise based on logical matrix 'mat'
 }

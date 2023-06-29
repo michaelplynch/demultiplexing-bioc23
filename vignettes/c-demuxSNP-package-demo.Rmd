@@ -10,7 +10,7 @@ output:
     toc_float: true
 bibliography: references.bib
 vignette: |
-  %\VignetteIndexEntry{Supervised Demultiplexing using Cell Hashing and SNPs demuxSNP}
+  %\VignetteIndexEntry{demuxSNP: supervised demultiplexing using cell hashing and SNPs}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

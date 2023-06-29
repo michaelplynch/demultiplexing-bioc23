@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 bibliography: references.bib
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Hashing demultiplexing benchmarking}
+  %\VignetteIndexEntry{Simulated benchmarking of hashing based algorithms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options: 
