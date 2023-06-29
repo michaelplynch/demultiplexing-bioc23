@@ -91,7 +91,7 @@ Example matrix:
 
 data("CITEseq_example", package = "CiteFuse")
 sce <- preprocessing(CITEseq_example)
-altExp(sce,"HTO")<-as(altExp(sce_citeseq,"HTO"),"SingleCellExperiment")
+altExp(sce,"HTO")<-as(altExp(sce,"HTO"),"SingleCellExperiment")
 sce <- normaliseExprs(sce = sce, altExp_name = "HTO", transform = "log")
 sce<-crossSampleDoublets(sce)
 hto<-counts(sce)
