@@ -7,12 +7,21 @@
 #' 
 #' @importFrom ggpubr gghistogram
 #'
-plot_hashtag<-function(df) {
+plot_hashtag<-function(df, split=NULL) {
 plots <- list()
 for (i in seq_along(colnames(df))) {
   tag<-colnames(df)[i]
-  df$signal<-tag==rownames(df)
-  plotx<-gghistogram(df, x=tag, fill =dittoColors()[i],palette = "lancet",alpha=1)
+  
+  if (is.null(split)){
+    fill=dittoColors()[i]
+  }
+  else {
+    df$split<-split
+    fill="split"
+  }
+  
+  
+  plotx<-gghistogram(df, x=tag, fill = fill, palette = "lancet", alpha=0.7)
   plots[[i]]<-plotx
 }
 return(plots)

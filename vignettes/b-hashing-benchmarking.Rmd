@@ -52,7 +52,7 @@ As demultiplexing performance is closely tied to data quality and hetergenity, t
 
 To overcome this, with the added benefit of hindsight, we simulate data to examine algorithm performance under specific conditions associated with poor hashing quality.
 
-## Data generation
+## Simulating Data
 
 ````{r}
 
@@ -64,8 +64,9 @@ Heatmap(mat)
 counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(50,2),mu_bg = rep(5,2),mat=mat,seed=1)
 counts[1:2,c(1,201,401,451)]
 Heatmap(log(counts+1))
+df<-as.data.frame(t(counts))
 
-myplots<-plot_hashtag(as.data.frame(t(counts)))
+myplots<-plot_hashtag(df)
 do.call(grid.arrange,myplots)
 ````
 
@@ -78,7 +79,9 @@ table(calls$bff_cluster)
 ````
 
 
-## Overall demultiplexing performance reduces with signal/noise ratio
+## Seurat FMs
+
+### Scenario 1
 
 ````{r}
 mu1<-seq(80,20,-5)
@@ -97,11 +100,15 @@ acc[i]<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
 
 }
 plot(mu1,acc)
-myplots<-plot_hashtag(as.data.frame(t(counts)))
+
+split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
+myplots<-plot_hashtag(as.data.frame(t(counts)),split=split)
 do.call(grid.arrange,myplots)
 ````
 
-## FPR increases with small group size
+## Scenario 2
+
+FPR increases with small group size
 
 ````{r}
 ncells<-seq(2000,100,-100)
@@ -124,7 +131,9 @@ myplots<-plot_hashtag(as.data.frame(t(counts)))
 do.call(grid.arrange,myplots)
 ````
 
-## Reduction in signal/noise ratio in one group
+## Scenario 3 
+
+Reduction in signal/noise ratio in one group
 
 ````{r}
 mu4<-seq(80,20,-10)
@@ -150,7 +159,7 @@ df<-data.frame(true=seurat$hashtag,pred=seurat$hash.ID)
 ggplot(df, aes(fill=pred,x=true))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
 ````
 
-## Reduction in signal/noise ratio and increased group size
+Reduction in signal/noise ratio and increased group size
 
 ````{r}
 mu4<-seq(80,20,-10)
@@ -169,7 +178,8 @@ acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$h
 
 }
 plot(mu4,acc)
-myplots<-plot_hashtag(as.data.frame(t(counts)))
+split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
+myplots<-plot_hashtag(as.data.frame(t(counts)),split=split)
 do.call(grid.arrange,myplots)
 ````
 
