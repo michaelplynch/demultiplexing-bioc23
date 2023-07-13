@@ -4,10 +4,12 @@
 \alias{plot_hashtag}
 \title{Plot histograms for hashtag counts}
 \usage{
-plot_hashtag(df)
+plot_hashtag(df, split = NULL)
 }
 \arguments{
 \item{df}{dataframe with hashtags as columns and cells as rows}
+
+\item{split}{variable to split histogram by}
 }
 \value{
 list of plots for each hashtag in df

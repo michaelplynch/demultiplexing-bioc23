@@ -3,5 +3,6 @@
 export(draw_counts)
 export(logimat)
 export(plot_hashtag)
+importFrom(dittoSeq,dittoColors)
 importFrom(ggpubr,gghistogram)
 importFrom(stats,rnbinom)
