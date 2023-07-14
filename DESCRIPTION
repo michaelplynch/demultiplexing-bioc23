@@ -18,7 +18,8 @@ Depends:
     R (>= 4.3.0)
 Imports:
     ggpubr,
-    dittoSeq
+    dittoSeq,
+    stats
 Suggests: 
     Seurat,
     SingleCellExperiment,
