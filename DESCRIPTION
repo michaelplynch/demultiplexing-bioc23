@@ -35,7 +35,8 @@ Suggests:
     cellhashR,
     gridExtra,
     kableExtra,
-    scater
+    scater,
+    dittoSeq
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR
