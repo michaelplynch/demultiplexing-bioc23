@@ -18,8 +18,7 @@ Depends:
     R (>= 4.3.0)
 Imports:
     ggpubr,
-    dittoSeq,
-    stats
+    dittoSeq
 Suggests: 
     Seurat,
     SingleCellExperiment,
@@ -27,7 +26,6 @@ Suggests:
     ComplexHeatmap,
     demuxSNP,
     CiteFuse,
-    dittoSeq,
     EnsDb.Hsapiens.v86,
     utils,
     knitr,
