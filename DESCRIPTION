@@ -17,7 +17,8 @@ RoxygenNote: 7.2.3
 Depends: 
     R (>= 4.3.0)
 Imports:
-    ggpubr
+    ggpubr,
+    dittoSeq
 Suggests: 
     Seurat,
     SingleCellExperiment,
@@ -35,8 +36,7 @@ Suggests:
     cellhashR,
     gridExtra,
     kableExtra,
-    scater,
-    dittoSeq
+    scater
 Remotes:
     michaelplynch/demuxSNP,
     bimberlab/cellhashR
