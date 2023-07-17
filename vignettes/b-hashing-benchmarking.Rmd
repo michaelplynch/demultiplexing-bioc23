@@ -32,6 +32,8 @@ library(SingleCellExperiment)
 library(gridExtra)
 library(Seurat)
 library(cellhashR)
+library(ggrepel)
+library(scales)
 ```
 
 
@@ -54,7 +56,7 @@ To overcome this, with the added benefit of hindsight, we simulate data to exami
 
 ## Simulating Data
 
-````{r}
+````{r warning=FALSE}
 
 mat<-logimat(ngroups=2,nsinglet=c(200,200),ndoub=50,nneg=50)
 library(ComplexHeatmap)
@@ -70,117 +72,115 @@ myplots<-plot_hashtag(df)
 do.call(grid.arrange,myplots)
 ````
 
-## cellhashR test
+## High quality hashing
 
-````{r}
-#reticulate::py_config()
-calls<-GenerateCellHashingCalls(barcodeMatrix=counts,methods="bff_cluster")
-table(calls$bff_cluster)
-````
+````{r fig.width=9,fig.height=3}
 
+mu1<-600
 
-## Seurat FMs
-
-### Scenario 1
-
-````{r}
-mu1<-seq(80,20,-5)
-acc<-c()
-for (i in seq_along(mu1)) {
-
-mat<-logimat(ngroups=4,nsinglet=rep(2000,4),ndoub=2000,nneg=200)
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(mu1[i],4),mu_bg = rep(5,4),mat=mat,seed=1)
+mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,2000),ndoub=1000,nneg=200)
+counts<-draw_counts(size_sig=10,size_bg = 3.5,mu_sig = c(mu1*1,mu1*1,mu1*1,mu1*1),mu_bg = rep(10,4),mat=mat,seed=1)
 hto<-SingleCellExperiment(list(counts=counts))
 
 seurat<-CreateSeuratObject(counts=counts,assay="HTO")
 seurat<-NormalizeData(seurat,normalization.method ="CLR")
-seurat$hashtag<-colnames(counts)
+seurat$hashtag<-as.factor(colnames(counts))
 seurat<-HTODemux(seurat)
-acc[i]<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
+#acc<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
+seurat$hashtag<-factor(seurat$hashtag,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
+groups<-levels(seurat$hashtag)
+precision<-c()
+recall<-c()
+for (i in seq_along(groups)) {
+
+k<-groups[i]
+cond<-seurat$hashtag==k
+recall[i]<-sum(seurat$hashtag[cond]==seurat$hash.ID[cond])/length(seurat$hashtag[cond])
+cond<-seurat$hash.ID==k
+precision[i]<-sum(seurat$hashtag[cond]==seurat$hash.ID[cond])/length(seurat$hashtag[cond])
 
 }
-plot(mu1,acc)
+groups<-factor(groups,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
+df<-data.frame(precision,recall,groups)
 
-split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
-myplots<-plot_hashtag(as.data.frame(t(counts)),split=split)
-do.call(grid.arrange,myplots)
+#split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
+myplots<-plot_hashtag(as.data.frame(t(seurat[["HTO"]]@data)),split=NULL)
+#myplots[[5]]<-xy
+do.call(grid.arrange,c(myplots,nrow=1))
+
 ````
-
-## Scenario 2
-
-FPR increases with small group size
-
 ````{r}
-ncells<-seq(2000,100,-100)
-acc<-c()
-for (i in seq_along(ncells)) {
 
-mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,ncells[i]),ndoub=2000,nneg=200)
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = rep(30,4),mu_bg = rep(5,4),mat=mat,seed=1)
+xy<-ggplot(df, aes(x=recall, y=precision,color=groups)) + 
+  geom_point(show.legend = FALSE,size=3) + 
+  scale_color_manual(values=dittoColors()[1:6]) + 
+  geom_text_repel(aes(label=groups), size=3,show.legend = FALSE,force=10) +
+  scale_x_continuous(labels = label_number(accuracy = 0.01)) +
+  scale_y_continuous(labels = label_number(accuracy = 0.01)) + 
+  xlim(0,1) +
+  ylim(0,1) + ggtitle("HTODemux")
+xy
+
+````
+## Poor quality hashing
+
+````{r fig.width=9,fig.height=3,warning=FALSE}
+
+mu1<-500
+mu2<-30
+mat<-logimat(ngroups=4,nsinglet=c(2000,1000,2500,150),ndoub=1000,nneg=200)
+counts<-draw_counts(size_sig=2.5,size_bg = 3.5,mu_sig = c(mu1*1.2,mu1*0.8,mu1*0.7,mu1*0.9),mu_bg = c(mu2,mu2,mu2,mu2),mat=mat,seed=1)
 hto<-SingleCellExperiment(list(counts=counts))
 
 seurat<-CreateSeuratObject(counts=counts,assay="HTO")
 seurat<-NormalizeData(seurat,normalization.method ="CLR")
-seurat$hashtag<-colnames(counts)
+seurat$hashtag<-as.factor(colnames(counts))
 seurat<-HTODemux(seurat)
-acc[i]<-(sum(seurat$hashtag[seurat$hash.ID=="Hashtag4"]==seurat$hash.ID[seurat$hash.ID=="Hashtag4"]))/length(seurat$hashtag[seurat$hash.ID=="Hashtag4"])
+#acc<-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)
+seurat$hashtag<-factor(seurat$hashtag,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
+groups<-levels(seurat$hashtag)
+precision<-c()
+recall<-c()
+for (i in seq_along(groups)) {
+
+k<-groups[i]
+cond<-seurat$hashtag==k
+recall[i]<-sum(seurat$hashtag[cond]==seurat$hash.ID[cond])/length(seurat$hashtag[cond])
+cond<-seurat$hash.ID==k
+precision[i]<-sum(seurat$hashtag[cond]==seurat$hash.ID[cond])/length(seurat$hashtag[cond])
 
 }
-plot(ncells,acc)
-myplots<-plot_hashtag(as.data.frame(t(counts)))
-do.call(grid.arrange,myplots)
+groups<-factor(groups,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
+df<-data.frame(precision,recall,groups)
+
+#split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
+myplots<-plot_hashtag(as.data.frame(t(seurat[["HTO"]]@data)),split=NULL)
+#myplots[[5]]<-xy
+do.call(grid.arrange,c(myplots,nrow=1))
+
 ````
 
-## Scenario 3 
+````{r}
 
-Reduction in signal/noise ratio in one group
+xy<-ggplot(df, aes(x=recall, y=precision,color=groups)) + 
+  geom_point(show.legend = FALSE,size=3) + 
+  scale_color_manual(values=dittoColors()[1:6]) + 
+  geom_text_repel(aes(label=groups), size=3,show.legend = FALSE,force=10) +
+  scale_x_continuous(labels = label_number(accuracy = 0.01)) +
+  scale_y_continuous(labels = label_number(accuracy = 0.01)) + 
+  xlim(0,1) +
+  ylim(0,1) + ggtitle("HTODemux")
+xy
+
+````
 
 ````{r}
-mu4<-seq(80,20,-10)
-acc<-c()
-for (i in seq_along(mu4)) {
-
-mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,2000),ndoub=2000,nneg=200)
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = c(40,40,40,mu4[i]),mu_bg = rep(5,4),mat=mat,seed=1)
-hto<-SingleCellExperiment(list(counts=counts))
-
-seurat<-CreateSeuratObject(counts=counts,assay="HTO")
-seurat<-NormalizeData(seurat,normalization.method ="CLR")
-seurat$hashtag<-colnames(counts)
-seurat<-HTODemux(seurat)
-acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
-
-}
-plot(mu4,acc)
-myplots<-plot_hashtag(as.data.frame(t(counts)))
-do.call(grid.arrange,myplots)
 
 df<-data.frame(true=seurat$hashtag,pred=seurat$hash.ID)
+df$true<-factor(df$true,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
+df$pred<-factor(df$pred,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
 ggplot(df, aes(fill=pred,x=true))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
-````
-
-Reduction in signal/noise ratio and increased group size
-
-````{r}
-mu4<-seq(80,20,-10)
-acc<-c()
-for (i in seq_along(mu4)) {
-
-mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,4000),ndoub=2000,nneg=200)
-counts<-draw_counts(size_sig=10,size_bg = 10,mu_sig = c(40,40,40,mu4[i]),mu_bg = rep(5,4),mat=mat,seed=1)
-hto<-SingleCellExperiment(list(counts=counts))
-
-seurat<-CreateSeuratObject(counts=counts,assay="HTO")
-seurat<-NormalizeData(seurat,normalization.method ="CLR")
-seurat$hashtag<-colnames(counts)
-seurat<-HTODemux(seurat)
-acc[i]<-(sum(seurat$hashtag[seurat$hashtag=="Hashtag4"]==seurat$hash.ID[seurat$hashtag=="Hashtag4"]))/length(seurat$hashtag[seurat$hashtag=="Hashtag4"])
-
-}
-plot(mu4,acc)
-split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
-myplots<-plot_hashtag(as.data.frame(t(counts)),split=split)
-do.call(grid.arrange,myplots)
+ggplot(df, aes(fill=true,x=pred))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
 ````
 
 # Session Info
