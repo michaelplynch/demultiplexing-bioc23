@@ -86,7 +86,7 @@ algorithms</h1>
                         <h4 data-toc-skip class="author">Michael
 Lynch</h4>
             
-            <h4 data-toc-skip class="date">2023-07-14</h4>
+            <h4 data-toc-skip class="date">2023-07-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/michaelplynch/demultiplexing-bioc23/blob/HEAD/vignettes/b-hashing-benchmarking.Rmd" class="external-link"><code>vignettes/b-hashing-benchmarking.Rmd</code></a></small>
       <div class="hidden name"><code>b-hashing-benchmarking.Rmd</code></div>
@@ -104,7 +104,9 @@ Lynch</h4>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SingleCellExperiment</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/BimberLab/cellhashR" class="external-link">cellhashR</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/BimberLab/cellhashR" class="external-link">cellhashR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/slowkow/ggrepel" class="external-link">ggrepel</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">'../R/which_signal.R'</span><span class="op">)</span></span>
@@ -154,338 +156,133 @@ associated with poor hashing quality.</p>
 <code class="sourceCode R"><span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-4-3.png" width="720"></p>
 </div>
 <div class="section level3">
-<h3 id="cellhashr-test">cellhashR test<a class="anchor" aria-label="anchor" href="#cellhashr-test"></a>
+<h3 id="high-quality-hashing">High quality hashing<a class="anchor" aria-label="anchor" href="#high-quality-hashing"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#reticulate::py_config()</span></span>
-<span><span class="va">calls</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/cellhashR/man/GenerateCellHashingCalls.html" class="external-link">GenerateCellHashingCalls</a></span><span class="op">(</span>barcodeMatrix<span class="op">=</span><span class="va">counts</span>,methods<span class="op">=</span><span class="st">"bff_cluster"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Starting BFF"</span></span>
-<span><span class="co">#&gt; [1] "rows dropped for low counts: 0 of 2"</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="va">mu1</span><span class="op">&lt;-</span><span class="fl">600</span></span>
+<span></span>
+<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">1000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">10</span>,size_bg <span class="op">=</span> <span class="fl">3.5</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">*</span><span class="fl">1</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">1</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">1</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">1</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">4</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">hto</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span>,assay<span class="op">=</span><span class="st">"HTO"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
 <span><span class="co">#&gt; unique</span></span>
-<span><span class="co">#&gt; [1] "Running BFF_cluster"</span></span>
-<span><span class="co">#&gt; [1] "Doublet threshold:  0.05"</span></span>
-<span><span class="co">#&gt; [1] "Neg threshold:  0.05"</span></span>
-<span><span class="co">#&gt; [1] "Min distance as fraction of distance between peaks:  0.1"</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-5-1.png" width="720"></p>
-<pre><code><span><span class="co">#&gt; [1] "Thresholds:"</span></span>
-<span><span class="co">#&gt; [1] "Hashtag2: 18.0582230758824"</span></span>
-<span><span class="co">#&gt; [1] "Hashtag1: 17.7446413333337"</span></span>
-<span><span class="co">#&gt; [1] "No valid barcodes, skipping BFF"</span></span>
-<span><span class="co">#&gt; [1] "ERROR; return code from pthread_create() is 22\n"</span></span>
-<span><span class="co">#&gt; No traceback available </span></span>
-<span><span class="co">#&gt; [1] "Error running BFF"</span></span>
-<span><span class="co">#&gt; [1] "Generating consensus calls"</span></span>
-<span><span class="co">#&gt; [1] "No algorithms produced calls, aborting"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">calls</span><span class="op">$</span><span class="va">bff_cluster</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt; table of extent 0 &gt;</span></span></code></pre>
-</div>
-<div class="section level3">
-<h3 id="seurat-fms">Seurat FMs<a class="anchor" aria-label="anchor" href="#seurat-fms"></a>
-</h3>
-<div class="section level4">
-<h4 id="scenario-1">Scenario 1<a class="anchor" aria-label="anchor" href="#scenario-1"></a>
-</h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">80</span>,<span class="fl">20</span>,<span class="op">-</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seurat</span>,normalization.method <span class="op">=</span><span class="st">"CLR"</span><span class="op">)</span></span>
+<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
+<span><span class="co">#acc&lt;-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)</span></span>
+<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">groups</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">)</span></span>
+<span><span class="va">precision</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">recall</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">groups</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
-<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">4</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">2000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
-<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">10</span>,size_bg <span class="op">=</span> <span class="fl">10</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,<span class="fl">4</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">k</span><span class="op">&lt;-</span><span class="va">groups</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span><span class="va">cond</span><span class="op">&lt;-</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="va">k</span></span>
+<span><span class="va">recall</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">cond</span><span class="op">&lt;-</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">==</span><span class="va">k</span></span>
+<span><span class="va">precision</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">groups</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">groups</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">precision</span>,<span class="va">recall</span>,<span class="va">groups</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#split=seurat$hashtag=="Hashtag4" &amp; seurat$hash.ID!= "Hashtag4"</span></span>
+<span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">[[</span><span class="st">"HTO"</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>,split<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
+<span><span class="co">#&gt; `bins`.</span></span>
+<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
+<span><span class="co">#&gt; `bins`.</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
+<span><span class="co">#&gt; `bins`.</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
+<span><span class="co">#&gt; `bins`.</span></span>
+<span><span class="co">#myplots[[5]]&lt;-xy</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">myplots</span>,nrow<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-5-1.png" width="864"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">xy</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">recall</span>, y<span class="op">=</span><span class="va">precision</span>,color<span class="op">=</span><span class="va">groups</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span>,size<span class="op">=</span><span class="fl">3</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_text_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">groups</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">3</span>,show.legend <span class="op">=</span> <span class="cn">FALSE</span>,force<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>accuracy <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>accuracy <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"HTODemux"</span><span class="op">)</span></span>
+<span><span class="va">xy</span></span></code></pre></div>
+<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-6-1.png" width="720">
+## Poor quality hashing</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">mu1</span><span class="op">&lt;-</span><span class="fl">500</span></span>
+<span><span class="va">mu2</span><span class="op">&lt;-</span><span class="fl">30</span></span>
+<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">1000</span>,<span class="fl">2500</span>,<span class="fl">150</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">1000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">2.5</span>,size_bg <span class="op">=</span> <span class="fl">3.5</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu1</span><span class="op">*</span><span class="fl">1.2</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">0.8</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">0.7</span>,<span class="va">mu1</span><span class="op">*</span><span class="fl">0.9</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu2</span>,<span class="va">mu2</span>,<span class="va">mu2</span>,<span class="va">mu2</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">hto</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span>,assay<span class="op">=</span><span class="st">"HTO"</span><span class="op">)</span></span>
 <span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seurat</span>,normalization.method <span class="op">=</span><span class="st">"CLR"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
+<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">)</span></span>
+<span><span class="co">#acc&lt;-(sum(seurat$hashtag==seurat$hash.ID))/length(seurat$hashtag)</span></span>
+<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">groups</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">)</span></span>
+<span><span class="va">precision</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">recall</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">groups</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span><span class="va">k</span><span class="op">&lt;-</span><span class="va">groups</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span><span class="va">cond</span><span class="op">&lt;-</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="va">k</span></span>
+<span><span class="va">recall</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">cond</span><span class="op">&lt;-</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">==</span><span class="va">k</span></span>
+<span><span class="va">precision</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">cond</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
+<span><span class="va">groups</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">groups</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">precision</span>,<span class="va">recall</span>,<span class="va">groups</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mu1</span>,<span class="va">acc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-6-1.png" width="720"></p>
+<span><span class="co">#split=seurat$hashtag=="Hashtag4" &amp; seurat$hash.ID!= "Hashtag4"</span></span>
+<span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">[[</span><span class="st">"HTO"</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>,split<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="co">#myplots[[5]]&lt;-xy</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">myplots</span>,nrow<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-7-1.png" width="864"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">split</span><span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span> <span class="op">&amp;</span> <span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">!=</span> <span class="st">"Hashtag4"</span></span>
-<span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span>,split<span class="op">=</span><span class="va">split</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-6-2.png" width="720"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="scenario-2">Scenario 2<a class="anchor" aria-label="anchor" href="#scenario-2"></a>
-</h3>
-<p>FPR increases with small group size</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ncells</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">100</span>,<span class="op">-</span><span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ncells</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span>,<span class="va">ncells</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">2000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
-<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">10</span>,size_bg <span class="op">=</span> <span class="fl">10</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">30</span>,<span class="fl">4</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">hto</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span>,assay<span class="op">=</span><span class="st">"HTO"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seurat</span>,normalization.method <span class="op">=</span><span class="st">"CLR"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ncells</span>,<span class="va">acc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-7-1.png" width="720"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-7-2.png" width="720"></p>
-</div>
-<div class="section level3">
-<h3 id="scenario-3">Scenario 3<a class="anchor" aria-label="anchor" href="#scenario-3"></a>
-</h3>
-<p>Reduction in signal/noise ratio in one group</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu4</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">80</span>,<span class="fl">20</span>,<span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">mu4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">2000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
-<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">10</span>,size_bg <span class="op">=</span> <span class="fl">10</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">40</span>,<span class="fl">40</span>,<span class="fl">40</span>,<span class="va">mu4</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">hto</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span>,assay<span class="op">=</span><span class="st">"HTO"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seurat</span>,normalization.method <span class="op">=</span><span class="st">"CLR"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mu4</span>,<span class="va">acc</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">xy</span><span class="op">&lt;-</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">recall</span>, y<span class="op">=</span><span class="va">precision</span>,color<span class="op">=</span><span class="va">groups</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span>,size<span class="op">=</span><span class="fl">3</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html" class="external-link">geom_text_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">groups</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">3</span>,show.legend <span class="op">=</span> <span class="cn">FALSE</span>,force<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>accuracy <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>accuracy <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"HTODemux"</span><span class="op">)</span></span>
+<span><span class="va">xy</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-8-1.png" width="720"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-8-2.png" width="720"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">df</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>true<span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span>,pred<span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">true</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">true</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">pred</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">pred</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hashtag1"</span>,<span class="st">"Hashtag2"</span>,<span class="st">"Hashtag3"</span>,<span class="st">"Hashtag4"</span>,<span class="st">"Negative"</span>,<span class="st">"Doublet"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">pred</span>,x<span class="op">=</span><span class="va">true</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-8-3.png" width="720"></p>
-<p>Reduction in signal/noise ratio and increased group size</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu4</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">80</span>,<span class="fl">20</span>,<span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">mu4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span><span class="va">mat</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/logimat.html">logimat</a></span><span class="op">(</span>ngroups<span class="op">=</span><span class="fl">4</span>,nsinglet<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">2000</span>,<span class="fl">4000</span><span class="op">)</span>,ndoub<span class="op">=</span><span class="fl">2000</span>,nneg<span class="op">=</span><span class="fl">200</span><span class="op">)</span></span>
-<span><span class="va">counts</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/draw_counts.html">draw_counts</a></span><span class="op">(</span>size_sig<span class="op">=</span><span class="fl">10</span>,size_bg <span class="op">=</span> <span class="fl">10</span>,mu_sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">40</span>,<span class="fl">40</span>,<span class="fl">40</span>,<span class="va">mu4</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>,mu_bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span><span class="op">)</span>,mat<span class="op">=</span><span class="va">mat</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">hto</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts</span>,assay<span class="op">=</span><span class="st">"HTO"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seurat</span>,normalization.method <span class="op">=</span><span class="st">"CLR"</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
-<span><span class="va">seurat</span><span class="op">&lt;-</span><span class="fu"><a href="https://satijalab.org/seurat/reference/HTODemux.html" class="external-link">HTODemux</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">)</span></span>
-<span><span class="va">acc</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">==</span><span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">[</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Non-unique cell names (colnames) present in the input matrix, making</span></span>
-<span><span class="co">#&gt; unique</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mu4</span>,<span class="va">acc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-9-1.png" width="720"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">split</span><span class="op">=</span><span class="va">seurat</span><span class="op">$</span><span class="va">hashtag</span><span class="op">==</span><span class="st">"Hashtag4"</span> <span class="op">&amp;</span> <span class="va">seurat</span><span class="op">$</span><span class="va">hash.ID</span><span class="op">!=</span> <span class="st">"Hashtag4"</span></span>
-<span><span class="va">myplots</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/plot_hashtag.html">plot_hashtag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span><span class="op">)</span>,split<span class="op">=</span><span class="va">split</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning: Using `bins = 30` by default. Pick better value with the argument</span></span>
-<span><span class="co">#&gt; `bins`.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">grid.arrange</span>,<span class="va">myplots</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">true</span>,x<span class="op">=</span><span class="va">pred</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/dittoSeq/man/dittoColors.html" class="external-link">dittoColors</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="b-hashing-benchmarking_files/figure-html/unnamed-chunk-9-2.png" width="720"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -511,68 +308,67 @@ associated with poor hashing quality.</p>
 <span><span class="co">#&gt; [8] methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] cellhashR_1.0.3             SeuratObject_4.1.3         </span></span>
-<span><span class="co">#&gt;  [3] Seurat_4.3.0.1              gridExtra_2.3              </span></span>
-<span><span class="co">#&gt;  [5] SingleCellExperiment_1.22.0 SummarizedExperiment_1.30.2</span></span>
-<span><span class="co">#&gt;  [7] Biobase_2.60.0              GenomicRanges_1.52.0       </span></span>
-<span><span class="co">#&gt;  [9] GenomeInfoDb_1.36.1         IRanges_2.34.1             </span></span>
-<span><span class="co">#&gt; [11] S4Vectors_0.38.1            BiocGenerics_0.46.0        </span></span>
-<span><span class="co">#&gt; [13] MatrixGenerics_1.12.2       matrixStats_1.0.0          </span></span>
-<span><span class="co">#&gt; [15] dittoSeq_1.12.0             ggpubr_0.6.0               </span></span>
-<span><span class="co">#&gt; [17] ggplot2_3.4.2               viridisLite_0.4.2          </span></span>
-<span><span class="co">#&gt; [19] ComplexHeatmap_2.16.0      </span></span>
+<span><span class="co">#&gt;  [1] scales_1.2.1                ggrepel_0.9.3              </span></span>
+<span><span class="co">#&gt;  [3] cellhashR_1.0.3             SeuratObject_4.1.3         </span></span>
+<span><span class="co">#&gt;  [5] Seurat_4.3.0.1              gridExtra_2.3              </span></span>
+<span><span class="co">#&gt;  [7] SingleCellExperiment_1.22.0 SummarizedExperiment_1.30.2</span></span>
+<span><span class="co">#&gt;  [9] Biobase_2.60.0              GenomicRanges_1.52.0       </span></span>
+<span><span class="co">#&gt; [11] GenomeInfoDb_1.36.1         IRanges_2.34.1             </span></span>
+<span><span class="co">#&gt; [13] S4Vectors_0.38.1            BiocGenerics_0.46.0        </span></span>
+<span><span class="co">#&gt; [15] MatrixGenerics_1.12.2       matrixStats_1.0.0          </span></span>
+<span><span class="co">#&gt; [17] dittoSeq_1.12.0             ggpubr_0.6.0               </span></span>
+<span><span class="co">#&gt; [19] ggplot2_3.4.2               viridisLite_0.4.2          </span></span>
+<span><span class="co">#&gt; [21] ComplexHeatmap_2.16.0      </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RcppAnnoy_0.0.21        splines_4.3.1           later_1.3.1            </span></span>
 <span><span class="co">#&gt;   [4] bitops_1.0-7            tibble_3.2.1            polyclip_1.10-4        </span></span>
-<span><span class="co">#&gt;   [7] preprocessCore_1.61.0   lifecycle_1.0.3         rstatix_0.7.2          </span></span>
-<span><span class="co">#&gt;  [10] doParallel_1.0.17       rprojroot_2.0.3         globals_0.16.2         </span></span>
-<span><span class="co">#&gt;  [13] lattice_0.21-8          MASS_7.3-60             backports_1.4.1        </span></span>
-<span><span class="co">#&gt;  [16] magrittr_2.0.3          plotly_4.10.2           sass_0.4.6             </span></span>
-<span><span class="co">#&gt;  [19] rmarkdown_2.23          jquerylib_0.1.4         yaml_2.3.7             </span></span>
-<span><span class="co">#&gt;  [22] httpuv_1.6.11           sctransform_0.3.5       sp_2.0-0               </span></span>
-<span><span class="co">#&gt;  [25] spatstat.sparse_3.0-2   reticulate_1.30         cowplot_1.1.1          </span></span>
-<span><span class="co">#&gt;  [28] pbapply_1.7-2           RColorBrewer_1.1-3      abind_1.4-5            </span></span>
-<span><span class="co">#&gt;  [31] zlibbioc_1.46.0         Rtsne_0.16              purrr_1.0.1            </span></span>
-<span><span class="co">#&gt;  [34] RCurl_1.98-1.12         tweenr_2.0.2            circlize_0.4.15        </span></span>
-<span><span class="co">#&gt;  [37] GenomeInfoDbData_1.2.10 ggrepel_0.9.3           irlba_2.3.5.1          </span></span>
-<span><span class="co">#&gt;  [40] listenv_0.9.0           spatstat.utils_3.0-3    pheatmap_1.0.12        </span></span>
-<span><span class="co">#&gt;  [43] goftest_1.2-3           spatstat.random_3.1-5   fitdistrplus_1.1-11    </span></span>
-<span><span class="co">#&gt;  [46] parallelly_1.36.0       pkgdown_2.0.7           leiden_0.4.3           </span></span>
-<span><span class="co">#&gt;  [49] codetools_0.2-19        DelayedArray_0.26.6     ggforce_0.4.1          </span></span>
-<span><span class="co">#&gt;  [52] tidyselect_1.2.0        shape_1.4.6             farver_2.1.1           </span></span>
-<span><span class="co">#&gt;  [55] rmdformats_1.0.4        spatstat.explore_3.2-1  jsonlite_1.8.7         </span></span>
-<span><span class="co">#&gt;  [58] GetoptLong_1.0.5        ellipsis_0.3.2          progressr_0.13.0       </span></span>
-<span><span class="co">#&gt;  [61] ggridges_0.5.4          survival_3.5-5          iterators_1.0.14       </span></span>
-<span><span class="co">#&gt;  [64] systemfonts_1.0.4       foreach_1.5.2           tools_4.3.1            </span></span>
-<span><span class="co">#&gt;  [67] ragg_1.2.5              ica_1.0-3               Rcpp_1.0.11            </span></span>
-<span><span class="co">#&gt;  [70] glue_1.6.2              xfun_0.39               dplyr_1.1.2            </span></span>
-<span><span class="co">#&gt;  [73] withr_2.5.0             fastmap_1.1.1           fansi_1.0.4            </span></span>
-<span><span class="co">#&gt;  [76] egg_0.4.5               digest_0.6.33           R6_2.5.1               </span></span>
-<span><span class="co">#&gt;  [79] mime_0.12               textshaping_0.3.6       colorspace_2.1-0       </span></span>
-<span><span class="co">#&gt;  [82] Cairo_1.6-0             scattermore_1.2         tensor_1.5             </span></span>
-<span><span class="co">#&gt;  [85] spatstat.data_3.0-1     ggsci_3.0.0             utf8_1.2.3             </span></span>
-<span><span class="co">#&gt;  [88] tidyr_1.3.0             generics_0.1.3          data.table_1.14.8      </span></span>
-<span><span class="co">#&gt;  [91] httr_1.4.6              htmlwidgets_1.6.2       S4Arrays_1.0.4         </span></span>
-<span><span class="co">#&gt;  [94] uwot_0.1.16             pkgconfig_2.0.3         gtable_0.3.3           </span></span>
-<span><span class="co">#&gt;  [97] lmtest_0.9-40           XVector_0.40.0          htmltools_0.5.5        </span></span>
-<span><span class="co">#&gt; [100] carData_3.0-5           bookdown_0.34           clue_0.3-64            </span></span>
-<span><span class="co">#&gt; [103] scales_1.2.1            png_0.1-8               knitr_1.43             </span></span>
-<span><span class="co">#&gt; [106] reshape2_1.4.4          rjson_0.2.21            nlme_3.1-162           </span></span>
-<span><span class="co">#&gt; [109] cachem_1.0.8            zoo_1.8-12              GlobalOptions_0.1.2    </span></span>
-<span><span class="co">#&gt; [112] stringr_1.5.0           KernSmooth_2.23-21      parallel_4.3.1         </span></span>
-<span><span class="co">#&gt; [115] miniUI_0.1.1.1          desc_1.4.2              pillar_1.9.0           </span></span>
-<span><span class="co">#&gt; [118] vctrs_0.6.3             RANN_2.6.1              promises_1.2.0.1       </span></span>
-<span><span class="co">#&gt; [121] car_3.1-2               xtable_1.8-4            cluster_2.1.4          </span></span>
-<span><span class="co">#&gt; [124] evaluate_0.21           magick_2.7.4            cli_3.6.1              </span></span>
-<span><span class="co">#&gt; [127] compiler_4.3.1          rlang_1.1.1             crayon_1.5.2           </span></span>
-<span><span class="co">#&gt; [130] future.apply_1.11.0     ggsignif_0.6.4          labeling_0.4.2         </span></span>
-<span><span class="co">#&gt; [133] naturalsort_0.1.3       plyr_1.8.8              fs_1.6.2               </span></span>
-<span><span class="co">#&gt; [136] stringi_1.7.12          deldir_1.0-9            munsell_0.5.0          </span></span>
-<span><span class="co">#&gt; [139] lazyeval_0.2.2          spatstat.geom_3.2-2     Matrix_1.6-0           </span></span>
-<span><span class="co">#&gt; [142] patchwork_1.1.2         future_1.33.0           shiny_1.7.4.1          </span></span>
-<span><span class="co">#&gt; [145] highr_0.10              ROCR_1.0-11             igraph_1.5.0           </span></span>
-<span><span class="co">#&gt; [148] broom_1.0.5             memoise_2.0.1           bslib_0.5.0</span></span></code></pre></div>
+<span><span class="co">#&gt;   [7] lifecycle_1.0.3         rstatix_0.7.2           doParallel_1.0.17      </span></span>
+<span><span class="co">#&gt;  [10] rprojroot_2.0.3         globals_0.16.2          lattice_0.21-8         </span></span>
+<span><span class="co">#&gt;  [13] MASS_7.3-60             backports_1.4.1         magrittr_2.0.3         </span></span>
+<span><span class="co">#&gt;  [16] plotly_4.10.2           sass_0.4.7              rmarkdown_2.23         </span></span>
+<span><span class="co">#&gt;  [19] jquerylib_0.1.4         yaml_2.3.7              httpuv_1.6.11          </span></span>
+<span><span class="co">#&gt;  [22] sctransform_0.3.5       sp_2.0-0                spatstat.sparse_3.0-2  </span></span>
+<span><span class="co">#&gt;  [25] reticulate_1.30         cowplot_1.1.1           pbapply_1.7-2          </span></span>
+<span><span class="co">#&gt;  [28] RColorBrewer_1.1-3      abind_1.4-5             zlibbioc_1.46.0        </span></span>
+<span><span class="co">#&gt;  [31] Rtsne_0.16              purrr_1.0.1             RCurl_1.98-1.12        </span></span>
+<span><span class="co">#&gt;  [34] circlize_0.4.15         GenomeInfoDbData_1.2.10 irlba_2.3.5.1          </span></span>
+<span><span class="co">#&gt;  [37] listenv_0.9.0           spatstat.utils_3.0-3    pheatmap_1.0.12        </span></span>
+<span><span class="co">#&gt;  [40] goftest_1.2-3           spatstat.random_3.1-5   fitdistrplus_1.1-11    </span></span>
+<span><span class="co">#&gt;  [43] parallelly_1.36.0       pkgdown_2.0.7           leiden_0.4.3           </span></span>
+<span><span class="co">#&gt;  [46] codetools_0.2-19        DelayedArray_0.26.6     tidyselect_1.2.0       </span></span>
+<span><span class="co">#&gt;  [49] shape_1.4.6             farver_2.1.1            rmdformats_1.0.4       </span></span>
+<span><span class="co">#&gt;  [52] spatstat.explore_3.2-1  jsonlite_1.8.7          GetoptLong_1.0.5       </span></span>
+<span><span class="co">#&gt;  [55] ellipsis_0.3.2          progressr_0.13.0        ggridges_0.5.4         </span></span>
+<span><span class="co">#&gt;  [58] survival_3.5-5          iterators_1.0.14        systemfonts_1.0.4      </span></span>
+<span><span class="co">#&gt;  [61] foreach_1.5.2           tools_4.3.1             ragg_1.2.5             </span></span>
+<span><span class="co">#&gt;  [64] ica_1.0-3               Rcpp_1.0.11             glue_1.6.2             </span></span>
+<span><span class="co">#&gt;  [67] xfun_0.39               dplyr_1.1.2             withr_2.5.0            </span></span>
+<span><span class="co">#&gt;  [70] fastmap_1.1.1           fansi_1.0.4             digest_0.6.33          </span></span>
+<span><span class="co">#&gt;  [73] R6_2.5.1                mime_0.12               textshaping_0.3.6      </span></span>
+<span><span class="co">#&gt;  [76] colorspace_2.1-0        Cairo_1.6-0             scattermore_1.2        </span></span>
+<span><span class="co">#&gt;  [79] tensor_1.5              spatstat.data_3.0-1     ggsci_3.0.0            </span></span>
+<span><span class="co">#&gt;  [82] utf8_1.2.3              tidyr_1.3.0             generics_0.1.3         </span></span>
+<span><span class="co">#&gt;  [85] data.table_1.14.8       httr_1.4.6              htmlwidgets_1.6.2      </span></span>
+<span><span class="co">#&gt;  [88] S4Arrays_1.0.4          uwot_0.1.16             pkgconfig_2.0.3        </span></span>
+<span><span class="co">#&gt;  [91] gtable_0.3.3            lmtest_0.9-40           XVector_0.40.0         </span></span>
+<span><span class="co">#&gt;  [94] htmltools_0.5.5         carData_3.0-5           bookdown_0.34          </span></span>
+<span><span class="co">#&gt;  [97] clue_0.3-64             png_0.1-8               knitr_1.43             </span></span>
+<span><span class="co">#&gt; [100] reshape2_1.4.4          rjson_0.2.21            nlme_3.1-162           </span></span>
+<span><span class="co">#&gt; [103] cachem_1.0.8            zoo_1.8-12              GlobalOptions_0.1.2    </span></span>
+<span><span class="co">#&gt; [106] stringr_1.5.0           KernSmooth_2.23-21      parallel_4.3.1         </span></span>
+<span><span class="co">#&gt; [109] miniUI_0.1.1.1          desc_1.4.2              pillar_1.9.0           </span></span>
+<span><span class="co">#&gt; [112] vctrs_0.6.3             RANN_2.6.1              promises_1.2.0.1       </span></span>
+<span><span class="co">#&gt; [115] car_3.1-2               xtable_1.8-4            cluster_2.1.4          </span></span>
+<span><span class="co">#&gt; [118] evaluate_0.21           magick_2.7.4            cli_3.6.1              </span></span>
+<span><span class="co">#&gt; [121] compiler_4.3.1          rlang_1.1.1             crayon_1.5.2           </span></span>
+<span><span class="co">#&gt; [124] future.apply_1.11.0     ggsignif_0.6.4          labeling_0.4.2         </span></span>
+<span><span class="co">#&gt; [127] plyr_1.8.8              fs_1.6.2                stringi_1.7.12         </span></span>
+<span><span class="co">#&gt; [130] deldir_1.0-9            munsell_0.5.0           lazyeval_0.2.2         </span></span>
+<span><span class="co">#&gt; [133] spatstat.geom_3.2-2     Matrix_1.6-0            patchwork_1.1.2        </span></span>
+<span><span class="co">#&gt; [136] future_1.33.0           shiny_1.7.4.1           highr_0.10             </span></span>
+<span><span class="co">#&gt; [139] ROCR_1.0-11             igraph_1.5.0            broom_1.0.5            </span></span>
+<span><span class="co">#&gt; [142] memoise_2.0.1           bslib_0.5.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
