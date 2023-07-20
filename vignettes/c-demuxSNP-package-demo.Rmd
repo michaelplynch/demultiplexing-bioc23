@@ -45,8 +45,8 @@ colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 
 # Introduction
 
-To refresh, demultiplexing allows reduction of sequencing costs by sequencing cells from multiple biological sampels on the same lane, as well as allowing identifying of the increased proportion of doublets associated with greater cells loaded.
-Poor demultiplexing performance results in waste in valuable data, reduction in LFC used in DE or otherwise potentially confusing results.
+To refresh, demultiplexing allows reduction of sequencing costs by sequencing cells from multiple biological samples on the same lane, as well as allowing identifying of the increased proportion of doublets associated with greater cells loaded.
+Poor demultiplexing performance results in waste in valuable data, reduction in LFC used in DE or otherwise potentially misleading results.
 
 ## Existing Methods
 
@@ -178,7 +178,7 @@ each grouping combination. Cells to be used for training data are specified by
 
 # Exploratory Analysis
 
-The sample dataset is a subset of ccRCC scRNAseq with six patients.
+The sample dataset contains hashtag and SNP data from a sequencing run of six samples containing two grups to be compared:
 
 ````{r fig.cap="Multiplexed scRNASeq sample dataset"}
 
