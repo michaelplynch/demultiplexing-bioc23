@@ -57,7 +57,21 @@ Multiplexing allows cells from multiple biological samples to be laoded simultan
 
 ## Demultiplexing
 
+
+````{r fig.cap="Multiplexed (multi-sample) scRNAseq"}
+
+knitr::include_graphics("./images/nonmultiplexed.png")
+
+````
+
 Multiplexing is a technique introduced to reduce sequencing cost by increasing the number of cells loaded per lane, while also allowing identification of doublets.
+
+````{r fig.cap="Multiplexed (multi-sample) scRNAseq"}
+
+knitr::include_graphics("./images/multiplexing.png")
+
+````
+
 Multiplexing in scRNAseq involves the sequencing of samples from different
 patients, treatment types or physiological locations together, resulting in
 significant cost savings. The cells must then be demultiplexed, or assigned back
@@ -65,11 +79,6 @@ to their respective groups. A number of experimental and computational methods
 have been proposed to facilitate this, but a universally robust algorithm
 remains elusive. Below, we introduce the two main approaches for demultiplexing and illustrate them with simplified examples.
 
-````{r fig.cap="edit to show demultiplexing step"}
-
-knitr::include_graphics("./images/droplet_encaps.png")
-
-````
 
 Successful demultiplexing is critical, with misassigned or unassigned cells resulting in increased waste and lower detectable fold changes between groups.
 
@@ -79,6 +88,13 @@ Cells from each group are labelled with a distinct tag (HTO or LMO) which is
 sequenced to give a counts matrix. 
 Due to non-specific binding, these counts
 form a bimodal distribution. 
+
+````{r fig.cap="Cell hashing",fig.width=8}
+
+knitr::include_graphics("./images/hashing.png")
+
+````
+
 Such methods are generally computationally
 efficient. 
 Their classification performance, however, is highly dependent on the
@@ -113,7 +129,7 @@ hto[1:4,1:4]
 
 #### Overall:
 
-````{r out.width = '100%',fig.width=8,fig.height=4}
+````{r out.width = '100%',fig.width=8}
 
 Heatmap(log(as.matrix(hto)+1),cluster_rows=FALSE,show_column_names = FALSE)
 
@@ -138,7 +154,7 @@ ggplot(data=df, aes(x=group, y=AAGCCGCGTTGTCTTT)) +
 
 Hashtag counts across a Hashtag (bimodal distriution)
 
-````{r out.width = '100%',fig.width=8,fig.height=4}
+````{r out.width = '100%',fig.width=8}
 set.seed(1)
 bg<-rnbinom(n=500,size=5,mu=2)
 sig<-rnbinom(n=400,size=10,mu=50)
@@ -166,7 +182,7 @@ dittoDimPlot(sce,reduction.use="TSNE","doubletClassify_between_label")
 The second class of methods exploits natural genetic variation between cells and
 so can only be used where the groups are genetically distinct. 
 
-````{r fig.cap="SNP variation between individuals"}
+````{r fig.cap="SNP variation between individuals",out.width='100%',fig.width=8}
 
 knitr::include_graphics("./images/snps.png")
 
