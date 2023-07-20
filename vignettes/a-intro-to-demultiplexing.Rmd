@@ -28,18 +28,15 @@ library(ggpubr)
 library(Seurat)
 library(gridExtra)
 library(scater)
-
+library(demultiplexingbioc23)
 ````
 
 ```{r}
 colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 ```
 
-````{r}
+````{r include=FALSE}
 
-source('../R/which_signal.R')
-source('../R/draw_counts.R')
-source('../R/plot_hashtag.R')
 
 ````
 

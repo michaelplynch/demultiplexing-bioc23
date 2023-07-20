@@ -34,16 +34,9 @@ library(Seurat)
 library(cellhashR)
 library(ggrepel)
 library(scales)
+library(demultiplexingbioc23)
 ```
 
-
-
-````{r}
-
-source('../R/which_signal.R')
-source('../R/draw_counts.R')
-source('../R/plot_hashtag.R')
-````
 
 # Benchmarking cell hashing based methods
 
