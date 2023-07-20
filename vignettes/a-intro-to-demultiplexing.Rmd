@@ -47,12 +47,10 @@ colors <- structure(viridis(n = 3), names = c("-1", "0", "1"))
 scRNAseq allows further understanding of cell states, heterogeneity, in TME and other areas.
 Sequencing costs are decreasing but remains a limiting factor in sample size.
 
-For full analysis pipelines see 'link to OSCA'.
+For full analysis pipelines see ['OSCA'](https://bioconductor.org/books/release/OSCA/) book.
 
-Multiplexing allows cells from multiple biological samples to be laoded simultaneously on the same lane 
-
-
-## Demultiplexing
+Droplet based single cell sequencing was initially limited by the doublet rate (a technical artifact where two or more cells are captured in the same droplet) and the number of cells from each sample a researched was interested in sequencing.
+Cells from each biological sample had to be sequenced on a different lane, resulting in increased cost.
 
 
 ````{r fig.cap="Multiplexed (multi-sample) scRNAseq"}
@@ -61,7 +59,10 @@ knitr::include_graphics("./images/nonmultiplexed.png")
 
 ````
 
-Multiplexing is a technique introduced to reduce sequencing cost by increasing the number of cells loaded per lane, while also allowing identification of doublets.
+## Demultiplexing
+
+Multiplexing is a technique to reduce sequencing cost by loading multiple samples per lane.
+Demultiplexing, is the assignment of cells back to their original sample, while also allowing the identification of some doublets cells.
 
 ````{r fig.cap="Multiplexed (multi-sample) scRNAseq"}
 
@@ -69,20 +70,17 @@ knitr::include_graphics("./images/multiplexing.png")
 
 ````
 
-Multiplexing in scRNAseq involves the sequencing of samples from different
-patients, treatment types or physiological locations together, resulting in
-significant cost savings. The cells must then be demultiplexed, or assigned back
-to their respective groups. A number of experimental and computational methods
+A number of experimental and computational methods
 have been proposed to facilitate this, but a universally robust algorithm
-remains elusive. Below, we introduce the two main approaches for demultiplexing and illustrate them with simplified examples.
+remains elusive. 
+Below, we introduce the two main approaches for demultiplexing and illustrate them with simplified examples.
 
 
 Successful demultiplexing is critical, with misassigned or unassigned cells resulting in increased waste and lower detectable fold changes between groups.
 
 ### Cell Hashing
 
-Cells from each group are labelled with a distinct tag (HTO or LMO) which is
-sequenced to give a counts matrix. 
+Cells from each group are labelled with a distinct sequencable barcode tag (HTO or LMO) which results in a counts matrix after being sequenced. 
 Due to non-specific binding, these counts
 form a bimodal distribution. 
 
