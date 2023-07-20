@@ -117,13 +117,13 @@ Lynch</h4>
 <p>scRNAseq allows further understanding of cell states, heterogeneity,
 in TME and other areas. Sequencing costs are decreasing but remains a
 limiting factor in sample size.</p>
-<p>For full analysis pipelines see ‘link to OSCA’.</p>
-<p>Multiplexing allows cells from multiple biological samples to be
-laoded simultaneously on the same lane</p>
-</div>
-<div class="section level3">
-<h3 id="demultiplexing">Demultiplexing<a class="anchor" aria-label="anchor" href="#demultiplexing"></a>
-</h3>
+<p>For full analysis pipelines see <a href="https://bioconductor.org/books/release/OSCA/" class="external-link">‘OSCA’</a> book.</p>
+<p>Droplet based single cell sequencing was initially limited by the
+doublet rate (a technical artifact where two or more cells are captured
+in the same droplet) and the number of cells from each sample a
+researched was interested in sequencing. Cells from each biological
+sample had to be sequenced on a different lane, resulting in increased
+cost.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"./images/nonmultiplexed.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -131,9 +131,14 @@ laoded simultaneously on the same lane</p>
 Multiplexed (multi-sample) scRNAseq
 </p>
 </div>
-<p>Multiplexing is a technique introduced to reduce sequencing cost by
-increasing the number of cells loaded per lane, while also allowing
-identification of doublets.</p>
+</div>
+<div class="section level3">
+<h3 id="demultiplexing">Demultiplexing<a class="anchor" aria-label="anchor" href="#demultiplexing"></a>
+</h3>
+<p>Multiplexing is a technique to reduce sequencing cost by loading
+multiple samples per lane. Demultiplexing, is the assignment of cells
+back to their original sample, while also allowing the identification of
+some doublets cells.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"./images/multiplexing.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -141,23 +146,20 @@ identification of doublets.</p>
 Multiplexed (multi-sample) scRNAseq
 </p>
 </div>
-<p>Multiplexing in scRNAseq involves the sequencing of samples from
-different patients, treatment types or physiological locations together,
-resulting in significant cost savings. The cells must then be
-demultiplexed, or assigned back to their respective groups. A number of
-experimental and computational methods have been proposed to facilitate
-this, but a universally robust algorithm remains elusive. Below, we
-introduce the two main approaches for demultiplexing and illustrate them
-with simplified examples.</p>
+<p>A number of experimental and computational methods have been proposed
+to facilitate this, but a universally robust algorithm remains elusive.
+Below, we introduce the two main approaches for demultiplexing and
+illustrate them with simplified examples.</p>
 <p>Successful demultiplexing is critical, with misassigned or unassigned
 cells resulting in increased waste and lower detectable fold changes
 between groups.</p>
 <div class="section level4">
 <h4 id="cell-hashing">Cell Hashing<a class="anchor" aria-label="anchor" href="#cell-hashing"></a>
 </h4>
-<p>Cells from each group are labelled with a distinct tag (HTO or LMO)
-which is sequenced to give a counts matrix. Due to non-specific binding,
-these counts form a bimodal distribution.</p>
+<p>Cells from each group are labelled with a distinct sequencable
+barcode tag (HTO or LMO) which results in a counts matrix after being
+sequenced. Due to non-specific binding, these counts form a bimodal
+distribution.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html" class="external-link">include_graphics</a></span><span class="op">(</span><span class="st">"./images/hashing.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">

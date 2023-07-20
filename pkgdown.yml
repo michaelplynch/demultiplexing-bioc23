@@ -5,7 +5,7 @@ articles:
   a-intro-to-demultiplexing: a-intro-to-demultiplexing.html
   b-hashing-benchmarking: b-hashing-benchmarking.html
   c-demuxSNP-package-demo: c-demuxSNP-package-demo.html
-last_built: 2023-07-20T15:27Z
+last_built: 2023-07-20T15:47Z
 urls:
   reference: https://michaelplynch.github.io/demultiplexing-bioc23/reference
   article: https://michaelplynch.github.io/demultiplexing-bioc23/articles
