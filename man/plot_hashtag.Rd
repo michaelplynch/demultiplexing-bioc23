@@ -4,12 +4,16 @@
 \alias{plot_hashtag}
 \title{Plot histograms for hashtag counts}
 \usage{
-plot_hashtag(df, split = NULL)
+plot_hashtag(df, split = NULL, xlim = c(0, NA), ylim = c(0, NA))
 }
 \arguments{
 \item{df}{dataframe with hashtags as columns and cells as rows}
 
 \item{split}{variable to split histogram by}
+
+\item{xlim}{z axis limits, lower defaults to zero}
+
+\item{ylim}{y axis limits, lower defaults to zero}
 }
 \value{
 list of plots for each hashtag in df

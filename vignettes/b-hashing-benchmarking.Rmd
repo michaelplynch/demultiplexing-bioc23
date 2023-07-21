@@ -119,10 +119,10 @@ xy
 
 ````{r fig.width=9,fig.height=3,warning=FALSE}
 
-mu1<-500
-mu2<-30
-mat<-logimat(ngroups=4,nsinglet=c(2000,1000,2500,150),ndoub=1000,nneg=200)
-counts<-draw_counts(size_sig=2.5,size_bg = 3.5,mu_sig = c(mu1*1.2,mu1*0.8,mu1*0.7,mu1*0.9),mu_bg = c(mu2,mu2,mu2,mu2),mat=mat,seed=1)
+mu1<-400
+mu2<-20
+mat<-logimat(ngroups=4,nsinglet=c(2000,1000,3200,150),ndoub=1000,nneg=200)
+counts<-draw_counts(size_sig=2.5,size_bg = c(2.5,2.5,2,2.5),mu_sig = c(mu1*1.2,mu1*0.9,mu1*0.7,mu1*0.9),mu_bg = c(mu2,mu2,mu2,mu2),mat=mat,seed=1)
 hto<-SingleCellExperiment(list(counts=counts))
 
 seurat<-CreateSeuratObject(counts=counts,assay="HTO")
@@ -147,7 +147,7 @@ groups<-factor(groups,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Nega
 df<-data.frame(precision,recall,groups)
 
 #split=seurat$hashtag=="Hashtag4" & seurat$hash.ID!= "Hashtag4"
-myplots<-plot_hashtag(as.data.frame(t(seurat[["HTO"]]@data)),split=NULL)
+myplots<-plot_hashtag(as.data.frame(t(seurat[["HTO"]]@data)),split=NULL,xlim=c(0,4),ylim=c(0,2000))
 #myplots[[5]]<-xy
 do.call(grid.arrange,c(myplots,nrow=1))
 
@@ -161,8 +161,8 @@ xy<-ggplot(df, aes(x=recall, y=precision,color=groups)) +
   geom_text_repel(aes(label=groups), size=3,show.legend = FALSE,force=10) +
   scale_x_continuous(labels = label_number(accuracy = 0.01)) +
   scale_y_continuous(labels = label_number(accuracy = 0.01)) + 
-  xlim(0,1) +
-  ylim(0,1) + ggtitle("HTODemux")
+  xlim(0,NA) +
+  ylim(0,NA) + ggtitle("HTODemux")
 xy
 
 ````
