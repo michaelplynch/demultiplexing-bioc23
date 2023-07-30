@@ -68,7 +68,7 @@ do.call(grid.arrange,myplots)
 ## High quality hashing
 
 ````{r fig.width=9,fig.height=3}
-
+set.seed(1)
 mu1<-600
 
 mat<-logimat(ngroups=4,nsinglet=c(2000,2000,2000,2000),ndoub=1000,nneg=200)
@@ -118,7 +118,7 @@ xy
 ## Poor quality hashing
 
 ````{r fig.width=9,fig.height=3,warning=FALSE}
-
+set.seed(1)
 mu1<-400
 mu2<-20
 mat<-logimat(ngroups=4,nsinglet=c(2000,1000,3200,150),ndoub=1000,nneg=200)
@@ -172,8 +172,10 @@ xy
 df<-data.frame(true=seurat$hashtag,pred=seurat$hash.ID)
 df$true<-factor(df$true,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
 df$pred<-factor(df$pred,levels=c("Hashtag1","Hashtag2","Hashtag3","Hashtag4","Negative","Doublet"))
-ggplot(df, aes(fill=pred,x=true))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
-ggplot(df, aes(fill=true,x=pred))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors())
+
+count<-ggplot(df, aes(fill=true,x=pred))+geom_bar() + scale_fill_manual(values=dittoColors())
+prop<-ggplot(df, aes(fill=true,x=pred))+geom_bar(position="fill") + scale_fill_manual(values=dittoColors()) +ylab("proportion")
+count+prop
 ````
 
 # Session Info
