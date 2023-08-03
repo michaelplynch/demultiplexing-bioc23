@@ -113,7 +113,7 @@ For full list of arguments and explanation of each function, please refer to
 relevant documentation.
 
 ## Workflow
- ? maybe remove this for demo
+
 ```{r}
 #Data loading
 data(multiplexed_scrnaseq_sce, 

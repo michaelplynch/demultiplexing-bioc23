@@ -178,6 +178,9 @@ prop<-ggplot(df, aes(fill=true,x=pred))+geom_bar(position="fill") + scale_fill_m
 count+prop
 ````
 
+
+
+
 # Session Info
 
 ```{r}
